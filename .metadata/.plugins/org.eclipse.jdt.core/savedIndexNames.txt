@@ -1,0 +1,3 @@
+INDEX VERSION 1.126+C:\Users\ggrassi\eclipse\challenge\.metadata\.plugins\org.eclipse.jdt.core
+4259844963.index
+1517127186.index
