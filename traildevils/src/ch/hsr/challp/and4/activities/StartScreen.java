@@ -1,5 +1,6 @@
 package ch.hsr.challp.and4.activities;
 
+import ch.hsr.challp.and4.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +11,9 @@ public class StartScreen extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-        Intent svc = new Intent("ch.hsr.challp.and4.technicalservices.JSONParser");
+		setContentView(R.layout.start_screen);
+		
+        Intent svc = new Intent(".technicalservices.JSONParser");
         startService(svc);
 	}
 

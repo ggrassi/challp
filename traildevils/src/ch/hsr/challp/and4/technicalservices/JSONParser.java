@@ -34,7 +34,7 @@ public class JSONParser extends IntentService {
 	
 	@Override
 	public void onCreate() {
-		url = getString(ch.hsr.R.string.JSONUrl);
+		url = getString(ch.hsr.challp.and4.R.string.JSONUrl);
 		super.onCreate();
 	}
 
