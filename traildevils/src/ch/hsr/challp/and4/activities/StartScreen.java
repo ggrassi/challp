@@ -59,8 +59,8 @@ public class StartScreen extends Activity {
 					sleep(3000);
 				}
 
-				Intent ac = new Intent(".activities.BrowserActivity");
-				startService(ac);
+				Intent ac = new Intent(".activities.TabContainerActivity");
+				startActivity(ac);
 			} catch (Exception e) {
 				Log.d("tag", "filtrino: " + "error:"
 						+ "Exception in zZzZ-Thread on StartScreen");
