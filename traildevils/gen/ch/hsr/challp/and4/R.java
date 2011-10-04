@@ -14,10 +14,18 @@ public final class R {
         public static final int closed=0x7f020000;
         public static final int icon=0x7f020001;
         public static final int offen=0x7f020002;
+        public static final int start_screen_bg=0x7f020003;
+        public static final int traildevils_logo=0x7f020004;
     }
     public static final class id {
+        public static final int imageView=0x7f050004;
+        public static final int imageView1=0x7f050008;
         public static final int parkname=0x7f050001;
+        public static final int progressBar1=0x7f050006;
+        public static final int relativeLayout1=0x7f050005;
         public static final int status_icon=0x7f050000;
+        public static final int textView1=0x7f050007;
+        public static final int wait_text=0x7f050009;
         public static final int wetter_abend=0x7f050003;
         public static final int wetter_morgen=0x7f050002;
     }
@@ -25,6 +33,7 @@ public final class R {
         public static final int list_entry=0x7f030000;
         public static final int main=0x7f030001;
         public static final int start_screen=0x7f030002;
+        public static final int start_screen2=0x7f030003;
     }
     public static final class string {
         public static final int JSONUrl=0x7f040002;
