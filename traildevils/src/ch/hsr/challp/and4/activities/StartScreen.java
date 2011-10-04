@@ -15,6 +15,8 @@ public class StartScreen extends Activity {
 		
         Intent svc = new Intent(".technicalservices.JSONParser");
         startService(svc);
+        Intent s = new Intent(".activities.BrowserTabActivity");
+        startActivity(s);
 	}
 
 }
