@@ -1,0 +1,32 @@
+<FrameLayout android:layout_width="fill_parent"
+	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+	<ImageView android:id="@+id/imageView" android:src="@drawable/start_screen_bg"
+		android:scaleType="centerCrop" android:layout_gravity="center"
+		android:layout_height="match_parent" android:layout_width="match_parent">
+	</ImageView>
+	<RelativeLayout android:layout_width="match_parent"
+		android:id="@+id/relativeLayout1" android:layout_height="match_parent">
+		<ProgressBar android:layout_width="wrap_content"
+			android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"
+			android:id="@+id/progressBar1" android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true" android:layout_marginBottom="130dp"></ProgressBar>
+		<TextView android:id="@+id/textView1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true" android:textSize="8dp"
+			android:layout_marginBottom="3dp" android:textColor="#FFFFFF"
+			android:bufferType="normal" android:background="#000000"
+			android:text="Picture: (CC BY 2.0) http://www.flickr.com/photos/andycpics/207158905/"
+			android:padding="2dp"></TextView>
+		<ImageView android:src="@drawable/traildevils_logo"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:id="@+id/imageView1" android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true" android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp" android:layout_marginTop="35dp"></ImageView>
+		<TextView android:id="@+id/wait_text" android:layout_width="wrap_content"
+			android:text="Download data..." android:layout_height="wrap_content"
+			android:textSize="12dp"
+			android:layout_above="@+id/textView1"
+			android:layout_centerHorizontal="true" android:layout_marginBottom="65dp"></TextView>
+	</RelativeLayout>
+</FrameLayout>
