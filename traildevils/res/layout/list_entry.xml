@@ -12,27 +12,24 @@
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="0dip" android:layout_weight="1"
 		android:layout_height="fill_parent">
-		<TextView android:id="@+id/parkname" android:layout_width="fill_parent"
+		<TextView android:id="@+id/list_parkname" android:layout_width="fill_parent"
 			android:layout_height="0dip" android:layout_weight="1"
 			android:gravity="center_vertical" android:text="My Application"
 			android:textColor="#FFFFFF" android:textSize="23px">
 		</TextView>
 
-		<LinearLayout android:orientation="horizontal"
-			android:layout_width="0dip" android:layout_weight="1"
-			android:layout_height="fill_parent">
-			<TextView android:id="@+id/wetter_morgen"
-				android:layout_width="fill_parent" android:layout_height="0dip"
-				android:layout_weight="1" android:singleLine="true"
-				android:ellipsize="marquee">
-			</TextView>
-			<TextView android:id="@+id/wetter_abend"
-				android:layout_width="fill_parent" android:layout_height="0dip"
-				android:layout_weight="1" android:singleLine="true"
-				android:ellipsize="marquee">
-			</TextView>
+		<TextView android:id="@+id/list_info"
+			android:layout_width="fill_parent" android:layout_height="0dip"
+			android:layout_weight="1" android:singleLine="true"
+			android:ellipsize="marquee">
+		</TextView>
 
-		</LinearLayout>
+		<TextView android:id="@+id/list_date"
+			android:layout_width="fill_parent" android:layout_height="0dip"
+			android:layout_weight="1" android:singleLine="true"
+			android:ellipsize="marquee">
+		</TextView>
+
 	</LinearLayout>
 
 </LinearLayout>

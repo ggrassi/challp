@@ -16,19 +16,23 @@ public final class R {
         public static final int offen=0x7f020002;
     }
     public static final class id {
-        public static final int parkname=0x7f050001;
+        public static final int LinearLayout01=0x7f050004;
+        public static final int list_date=0x7f050003;
+        public static final int list_info=0x7f050002;
+        public static final int list_parkname=0x7f050001;
         public static final int status_icon=0x7f050000;
-        public static final int wetter_abend=0x7f050003;
-        public static final int wetter_morgen=0x7f050002;
     }
     public static final class layout {
-        public static final int list_entry=0x7f030000;
-        public static final int main=0x7f030001;
-        public static final int start_screen=0x7f030002;
+        public static final int browser_tab=0x7f030000;
+        public static final int list_entry=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int start_screen=0x7f030003;
+        public static final int tab=0x7f030004;
     }
     public static final class string {
         public static final int JSONUrl=0x7f040002;
         public static final int app_name=0x7f040001;
         public static final int hello=0x7f040000;
+        public static final int no_trails=0x7f040003;
     }
 }

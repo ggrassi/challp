@@ -1,14 +1,16 @@
 package ch.hsr.challp.and4.activities;
 
 import android.app.ListActivity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+import ch.hsr.challp.and4.R;
+import ch.hsr.challp.and4.domain.Trail;
 
 public class BrowserActivity extends ListActivity {
 
@@ -16,19 +18,22 @@ public class BrowserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
 
-//	  setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, PARKS ));
-//
-//	  ListView lv = getListView();
-//	  lv.setTextFilterEnabled(true);
-//
-//	  lv.setOnItemClickListener(new OnItemClickListener() {
-//	    public void onItemClick(AdapterView<?> parent, View view,
-//	        int position, long id) {
-//	      // When clicked, show a toast with the TextView text
-//	      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-//	          Toast.LENGTH_SHORT).show();
-//	    }
-//	  });
+	  setListAdapter(new ArrayAdapter<Trail>(this, ch.hsr.challp.and4.R.layout.list_entry, Trail.getTrails() ));
+
+	  ListView lv = getListView();
+	  lv.setTextFilterEnabled(true);
+
+	  lv.setOnItemClickListener(new OnItemClickListener() {
+	    public void onItemClick(AdapterView<?> parent, View view,
+	        int position, long id) {
+	      // When clicked, show a toast with the TextView text
+	    	
+	    	//TODO
+	    	
+	      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
+	          Toast.LENGTH_SHORT).show();
+	    }
+	  });
 	}
 	
 	
