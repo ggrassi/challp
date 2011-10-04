@@ -15,51 +15,52 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.os.Handler;
+import android.os.Message;
 import ch.hsr.challp.and4.domain.Trail;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.util.Log;
-
-public class JSONParser extends IntentService {
+public class JSONParser extends Thread {
 	String url;
-	
-	public JSONParser() {
-		this("JSONParser");
-	}
+	Handler handler;
 
-	public JSONParser(String name) {
-		super(name);
-	}
-	
-	@Override
-	public void onCreate() {
-		url = getString(ch.hsr.challp.and4.R.string.JSONUrl);
-		super.onCreate();
+	public JSONParser(String url, Handler handler) {
+		this.url = url;
+		this.handler = handler;
 	}
 
 	@Override
-	protected void onHandleIntent(Intent arg0) {
-		Log.d("tag", "filtrino: " + "json-url:" + url);
+	public void run() {
+		sendMessage(1000);
 		parse();
+		sendMessage(3000);
 	}
-	
+
 	private void parse() {
 		try {
 			String readedFeed = readFeed();
 			JSONArray jsonArray = new JSONArray(readedFeed);
+			
+			sendMessage(2000);
+			
 			for (int i = 0; i < jsonArray.length(); i++) {
+				if (i % (jsonArray.length() / 10) == 0) {
+					if((i / (jsonArray.length() / 10) * 10) <= 100) {
+						sendMessage(2000, (i / (jsonArray.length() / 10) * 10));
+					}
+				}
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				
+				@SuppressWarnings("unused")
 				Trail tmpTrail = new Trail(jsonObject);
-				Log.d("tag", "filtrino: " + "json-obj:" + tmpTrail);
 			}
 		} catch (Exception e) {
+			//TODO: Handle Excpetion
 			e.printStackTrace();
-			Log.d("tag", "filtrino: " + "Exception:" + e.toString());
 		}
 	}
-	
+
 	private String readFeed() {
+		sendMessage(1100);
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);
@@ -74,25 +75,31 @@ public class JSONParser extends IntentService {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(content));
 				String line;
-				Log.d("tag", "line-start");
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
-					Log.d("tag", "line");
 				}
-				Log.d("tag", "line-stop");
 			} else {
-				Log.e("tag", "filtrino: " + "Failure:"
-						+ "Failed to download file");
+				// TODO: Handle Failure
 			}
 		} catch (ClientProtocolException e) {
+			// TODO: Handle Exception
 			e.printStackTrace();
-			Log.d("tag", "filtrino: " + "Exception:" + e.toString());
 		} catch (IOException e) {
+			// TODO: Handle Exception
 			e.printStackTrace();
-			Log.d("tag", "filtrino: " + "Exception:" + e.toString());
 		}
-		Log.d("tag", "filtrino: " + "builder:" + builder.toString());
 		return builder.toString();
+	}
+
+	private void sendMessage(int arg1) {
+		sendMessage(arg1, 0);
+	}
+
+	private void sendMessage(int arg1, int arg2) {
+		Message msg = handler.obtainMessage();
+		msg.arg1 = arg1;
+		msg.arg2 = arg2;
+		handler.sendMessage(msg);
 	}
 
 }

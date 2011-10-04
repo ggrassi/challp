@@ -1,6 +1,7 @@
 package ch.hsr.challp.and4.activities;
 
 import ch.hsr.challp.and4.R;
+import ch.hsr.challp.and4.technicalservices.JSONParser;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,26 +12,38 @@ import android.widget.TextView;
 
 public class StartScreen extends Activity {
 	private TextView textViewToChange;
-	
-	String[] texts = { "Coffee...", "Smoke...",
-			"Just wasting time...", "Have a beer..." };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.start_screen2);
+		setContentView(R.layout.start_screen);
 
-		Thread zZzZz = new ZzZzZz(handler);
-
-		zZzZz.start();
-
+		Controller controller = new Controller(handler);
+		controller.start();
 	}
 
 	final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			setWaitText(texts[msg.arg1]);
-
+			String message;
+			switch (msg.arg1) {
+			case 1000:
+				message = "Start...";
+				break;
+			case 1100:
+				message = "Download...";
+				break;
+			case 2000:
+				message = "Parsing... ( " + msg.arg2 + " % )";
+				break;
+			case 3000:
+				message = "Launching Trail-Browser...";
+				break;
+			default:
+				message = "Error! (no such message)";
+				break;
+			}
+			setWaitText(message);
 		}
 	};
 
@@ -39,25 +52,19 @@ public class StartScreen extends Activity {
 		textViewToChange.setText(WaitText);
 	}
 
-	class ZzZzZz extends Thread {
+	class Controller extends Thread {
 		Handler myH;
-		
-		public ZzZzZz(Handler h) {
+
+		public Controller(Handler h) {
 			myH = h;
 		}
 
 		public void run() {
 			try {
-				Intent svc = new Intent(".technicalservices.JSONParser");
-				startService(svc);
-
-				sleep(3000);
-				for (int i = 0; i < texts.length; i++) {
-	                Message msg = myH.obtainMessage();
-	                msg.arg1 = i;
-	                myH.sendMessage(msg);
-					sleep(3000);
-				}
+				JSONParser parser = new JSONParser(
+						getString(ch.hsr.challp.and4.R.string.JSONUrl), myH);
+				parser.start();
+				parser.join();
 
 				Intent ac = new Intent(".activities.TabContainerActivity");
 				startActivity(ac);
@@ -70,5 +77,4 @@ public class StartScreen extends Activity {
 			}
 		};
 	};
-
 }
