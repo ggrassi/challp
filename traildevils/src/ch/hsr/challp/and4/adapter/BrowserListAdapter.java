@@ -3,6 +3,7 @@ package ch.hsr.challp.and4.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,19 +13,21 @@ import ch.hsr.challp.and4.domain.Trail;
 public class BrowserListAdapter extends ArrayAdapter<Trail> {
 
 	private ArrayList<Trail> trails;
+	private Context context;
 
 	public BrowserListAdapter(Context context, int textViewResourceId,
 			ArrayList<Trail> trails) {
 		super(context, textViewResourceId, trails);
 		this.trails = trails;
+		this.context=context;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
 		if (v == null) {
-//			LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//			v = vi.inflate(ch.hsr.challp.and4.R.layout.list_entry, null);
+			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = vi.inflate(ch.hsr.challp.and4.R.layout.list_entry, null);
 		}
 
 		Trail trail = trails.get(position);

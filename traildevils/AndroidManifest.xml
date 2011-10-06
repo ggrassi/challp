@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="ch.hsr.challp.and4" android:versionCode="1" android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="ch.hsr.challp.and4" android:versionCode="1"
+	android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".activities.TabBarExample"
-			android:label="@string/app_name">
+		<activity android:name=".activities.TabContainer" >
 			<intent-filter>
-				<action android:name=".activities.TabBarExample" />
+				<action android:name=".activities.TabHead" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.FirstTab"
-			android:label="@string/app_name">
+		<activity android:name=".activities.TrailBrowserTab">
 		</activity>
-		<activity android:name=".activities.SecondTab"
-			android:label="@string/app_name">
+		<activity android:name=".activities.MapTab" >
 		</activity>
 		<activity android:name=".activities.StartScreen"
 			android:label="@string/app_name">
