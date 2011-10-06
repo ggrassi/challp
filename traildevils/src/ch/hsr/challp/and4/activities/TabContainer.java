@@ -20,6 +20,7 @@ public class TabContainer extends TabActivity {
 		TabHost.TabSpec spec;
 		Intent intent;
 
+		
 		intent = new Intent().setClass(this, TrailBrowserTab.class);
 		spec = tabHost.newTabSpec("some_things").setIndicator("Trails", res.getDrawable(R.drawable.ic_tab_trailbrowser))
 				.setContent(intent);
