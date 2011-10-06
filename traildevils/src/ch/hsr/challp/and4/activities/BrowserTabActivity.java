@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.adapter.BrowserListAdapter;
+import ch.hsr.challp.and4.domain.Trail;
 
 public class BrowserTabActivity extends ListActivity {
 	
@@ -17,9 +18,9 @@ public class BrowserTabActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(ch.hsr.challp.and4.R.layout.browser_tab);
+		setContentView(R.layout.browser_tab);
 		trails = Trail.getTrails();
-		this.t_adapter = new BrowserListAdapter(this, ch.hsr.challp.and4.R.layout.list_entry, trails);
+		this.t_adapter = new BrowserListAdapter(this, R.layout.list_entry, trails);
 		setListAdapter(this.t_adapter);
 
 	}

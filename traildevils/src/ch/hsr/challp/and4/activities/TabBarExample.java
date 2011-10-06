@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import ch.hsr.challp.and4.R;
 
 public class TabBarExample extends TabActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(ch.hsr.challp.and4.R.layout.tab);
+		setContentView(R.layout.tab);
 
 		/** TabHost will have Tabs */
 		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);

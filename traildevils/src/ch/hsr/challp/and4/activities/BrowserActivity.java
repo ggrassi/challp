@@ -4,11 +4,11 @@ import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.domain.Trail;
 
@@ -18,7 +18,7 @@ public class BrowserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
 
-	  setListAdapter(new ArrayAdapter<Trail>(this, ch.hsr.challp.and4.R.layout.list_entry, Trail.getTrails() ));
+	  setListAdapter(new ArrayAdapter<Trail>(this, R.layout.list_entry, Trail.getTrails() ));
 
 	  ListView lv = getListView();
 	  lv.setTextFilterEnabled(true);
