@@ -66,7 +66,7 @@ public class StartScreen extends Activity {
 				parser.start();
 				parser.join();
 
-				Intent ac = new Intent(".activities.TabContainerActivity");
+				Intent ac = new Intent(".activities.TabBarExample");
 				startActivity(ac);
 			} catch (Exception e) {
 				Log.d("tag", "filtrino: " + "error:"
