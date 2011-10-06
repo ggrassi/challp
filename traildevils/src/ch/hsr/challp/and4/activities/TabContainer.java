@@ -8,8 +8,6 @@ import android.widget.TabHost;
 import ch.hsr.challp.and4.R;
 
 public class TabContainer extends TabActivity {
-
-	 Resources res = getResources();
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,12 +20,12 @@ public class TabContainer extends TabActivity {
 
 		
 		intent = new Intent().setClass(this, TrailBrowserTab.class);
-		spec = tabHost.newTabSpec("some_things").setIndicator("Trails", res.getDrawable(R.drawable.ic_tab_trailbrowser))
+		spec = tabHost.newTabSpec("some_things").setIndicator("Trails", getResources().getDrawable(R.drawable.ic_tab_trailbrowser))
 				.setContent(intent);
 		tabHost.addTab(spec);
 		
 		intent = new Intent().setClass(this, MapTab.class);
-		spec = tabHost.newTabSpec("dif_things").setIndicator("map", res.getDrawable(R.drawable.ic_tab_map))
+		spec = tabHost.newTabSpec("dif_things").setIndicator("map", getResources().getDrawable(R.drawable.ic_tab_map))
 				.setContent(intent);
 		tabHost.addTab(spec);
 	}
