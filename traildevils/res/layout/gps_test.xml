@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <TextView android:text="Latitud: " android:id="@+id/latitud_title" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/latitud_value" android:text="0" android:layout_height="wrap_content" android:layout_marginBottom="10dp"></TextView>
+    <TextView android:text="Longitud: " android:id="@+id/longitud_title" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/longitud_value" android:text="0" android:layout_height="wrap_content"></TextView>
+    <TextView android:layout_width="wrap_content" android:id="@+id/adam_title" android:layout_height="wrap_content" android:text="Distance to Wonder Bar 2:" android:layout_marginTop="20dp"></TextView>
+    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/adam_value" android:text="0" android:layout_height="wrap_content"></TextView>    
+</LinearLayout>
