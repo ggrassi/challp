@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import ch.hsr.challp.and4.adapter.BrowserListAdapter;
 import ch.hsr.challp.and4.domain.Trail;
+
 
 public class TrailBrowserTab extends ListActivity {
 	private ArrayList<Trail> trails = null;

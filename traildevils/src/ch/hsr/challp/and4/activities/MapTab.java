@@ -10,6 +10,7 @@ public class MapTab extends Activity {
 		super.onCreate(savedInstanceState);
 //		setContentView(ch.hsr.challp.and4.R.layout.list_view);
 
+		
 
 	}
 }

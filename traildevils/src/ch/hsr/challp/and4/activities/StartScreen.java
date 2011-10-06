@@ -66,6 +66,7 @@ public class StartScreen extends Activity {
 				parser.start();
 				parser.join();
 
+				
 				Intent ac = new Intent(".activities.TabHead");
 				startActivity(ac);
 			} catch (Exception e) {
