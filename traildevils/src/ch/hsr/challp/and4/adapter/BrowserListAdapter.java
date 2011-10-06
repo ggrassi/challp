@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.domain.Trail;
 
 public class BrowserListAdapter extends ArrayAdapter<Trail> {
@@ -33,11 +34,11 @@ public class BrowserListAdapter extends ArrayAdapter<Trail> {
 		Trail trail = trails.get(position);
 		if (trail != null) {
 			TextView parkname = (TextView) v
-					.findViewById(ch.hsr.challp.and4.R.id.list_parkname);
+					.findViewById(R.id.list_parkname);
 			TextView info = (TextView) v
-					.findViewById(ch.hsr.challp.and4.R.id.list_info);
+					.findViewById(R.id.list_info);
 			TextView date = (TextView) v
-					.findViewById(ch.hsr.challp.and4.R.id.list_date);
+					.findViewById(R.id.list_date);
 
 			if (parkname != null && info != null && date != null) {
 				parkname.setText(trail.getName());
