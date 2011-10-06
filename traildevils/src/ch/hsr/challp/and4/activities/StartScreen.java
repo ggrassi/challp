@@ -6,12 +6,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 
 public class StartScreen extends Activity {
+	private boolean shouldStartTabContainer = true;
+	private Controller controller;
 	private TextView textViewToChange;
+
+	public void goToGPSView(View v) {
+		shouldStartTabContainer = false;
+
+		Intent ac = new Intent(".activities.GPSTest");
+		startActivity(ac);
+
+		finish();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +31,7 @@ public class StartScreen extends Activity {
 
 		setContentView(R.layout.start_screen);
 
-		Controller controller = new Controller(handler);
+		controller = new Controller(handler);
 		controller.start();
 	}
 
@@ -66,9 +78,10 @@ public class StartScreen extends Activity {
 				parser.start();
 				parser.join();
 
-				
-				Intent ac = new Intent(".activities.TabHead");
-				startActivity(ac);
+				if (shouldStartTabContainer) {
+					Intent ac = new Intent(".activities.TabHead");
+					startActivity(ac);
+				}
 			} catch (Exception e) {
 				Log.d("tag", "filtrino: " + "error:"
 						+ "Exception in zZzZ-Thread on StartScreen");
