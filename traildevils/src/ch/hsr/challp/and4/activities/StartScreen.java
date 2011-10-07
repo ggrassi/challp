@@ -1,7 +1,10 @@
 package ch.hsr.challp.and4.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
+import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 
 public class StartScreen extends Activity {
 	private boolean shouldStartTabContainer = true;
@@ -31,6 +35,12 @@ public class StartScreen extends Activity {
 
 		setContentView(R.layout.start_screen);
 
+		setWaitText("Getting Position...");
+		LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		LocationListener mlocListener = new UserLocationListener();
+		mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+				mlocListener);
+
 		controller = new Controller(handler);
 		controller.start();
 	}
@@ -40,7 +50,7 @@ public class StartScreen extends Activity {
 			String message;
 			switch (msg.arg1) {
 			case 1000:
-				message = "Start...";
+				message = "Start Syncing...";
 				break;
 			case 1100:
 				message = "Download...";
@@ -73,6 +83,7 @@ public class StartScreen extends Activity {
 
 		public void run() {
 			try {
+
 				JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
 						myH);
 				parser.start();

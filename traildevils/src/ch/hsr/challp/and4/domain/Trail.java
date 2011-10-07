@@ -30,11 +30,11 @@ public class Trail {
 		return favorits;
 	}
 
-	public int getGmapX() {
+	public float getGmapX() {
 		return gmapX;
 	}
 
-	public int getGmapY() {
+	public float getGmapY() {
 		return gmapY;
 	}
 
@@ -95,7 +95,9 @@ public class Trail {
 	}
 
 	private static ArrayList<Trail> trails = new ArrayList<Trail>();
-	private int countryId, favorits, gmapX, gmapY, trailId;
+	private int countryId, favorits, trailId;
+	float gmapX;
+	float gmapY;
 	private Date creationDate;
 	private String country, description, imageUrl120, imageUrl800, info,
 			journey, name, nextCity, state, url;
@@ -124,8 +126,8 @@ public class Trail {
 		creationDate = createDateFromJson(trailJson.getString("CreatedDate"));
 		description = trailJson.getString("Desc");
 		favorits = trailJson.getInt("Favorits");
-		gmapX = (int) (trailJson.getDouble("GmapX") * 1E6);
-		gmapY = (int) (trailJson.getDouble("GmapY") * 1E6);
+		gmapX = (float) (trailJson.getDouble("GmapX"));
+		gmapY = (float) (trailJson.getDouble("GmapY"));
 		imageUrl120 = trailJson.getString("ImageUrl120");
 		imageUrl800 = trailJson.getString("ImageUrl800");
 		info = trailJson.getString("Info");

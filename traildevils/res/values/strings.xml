@@ -4,4 +4,6 @@
     <string name="app_name">traildevils.ch</string>
     <string name="JSONUrl">http://152.96.80.18:8080/api/trails</string>
     <string name="no_trails">No Trails available</string>
+    <string name="trail_browser_tab_title">Trail Browser</string>
+    <string name="map_tab_title">Karte</string>
 </resources>
