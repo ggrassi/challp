@@ -59,7 +59,7 @@ public class BrowserListAdapter extends ArrayAdapter<Trail> {
 			float[] results = new float[3];
 			if (UserLocation.getInstance().getLatitude() > 0
 					&& UserLocation.getInstance().getLongitude() > 0) {
-				Location.distanceBetween(trail.getGmapY(), trail.getGmapX(),
+				Location.distanceBetween(trail.getGmapX(), trail.getGmapY(),
 						UserLocation.getInstance().getLatitude(), UserLocation
 								.getInstance().getLongitude(), results);
 				if (true) { // TODO: Check if value is realistic
