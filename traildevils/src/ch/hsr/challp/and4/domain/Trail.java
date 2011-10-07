@@ -6,6 +6,7 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.Html;
 import android.util.Log;
 
 public class Trail {
@@ -63,7 +64,7 @@ public class Trail {
 	}
 
 	public String getInfo() {
-		return info;
+		return Html.fromHtml(info).toString();
 	}
 
 	public String getJourney() {
@@ -106,6 +107,7 @@ public class Trail {
 	public Trail(JSONObject trailJson) {
 		try {
 			converte(trailJson);
+			
 			trails.add(this);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

@@ -11,13 +11,17 @@
 		</activity>
 		<activity android:name=".activities.TabContainer" >
 			<intent-filter>
-				<action android:name=".activities.TabHead" />
+				<action android:name=".activities.TabContainer" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.TrailBrowserTab">
-		</activity>
-		<activity android:name=".activities.MapTab" >
+		<activity android:name=".activities.TrailBrowserTab"/>
+		<activity android:name=".activities.MapTab"/>
+		<activity android:name=".activities.TrailDetail">
+			<intent-filter>
+				<action android:name=".activities.TrailDetail" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 		</activity>
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />

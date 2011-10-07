@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" android:weightSum="1" android:orientation="vertical">
+    <ImageView android:id="@+id/trailImage" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="0.32" android:src="@drawable/ic_tab_favorites"></ImageView>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayoutRow1" android:layout_height="wrap_content" android:weightSum="1" android:layout_weight="0.10">
+        <LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutNameLeft" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+            <TextView android:text="@string/detail_title" android:id="@+id/trailNameDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutNameRight" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+        	<TextView android:text="@string/detail_na" android:id="@+id/detailTrailName" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayoutRow2" android:layout_height="wrap_content" android:weightSum="1" android:layout_weight="0.10">
+    	<LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutCountryLeft" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+    		<TextView android:text="@string/detail_country" android:id="@+id/trailCountryDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    	</LinearLayout>
+    	<LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutCountryRight" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+    		<TextView android:text="@string/detail_na" android:id="@+id/detailTrailCountry" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    	</LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayoutRow3" android:layout_height="wrap_content" android:weightSum="1" android:layout_weight="0.10">
+    	<LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutDescriptionLeft" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+    		<TextView android:text="@string/detail_description" android:id="@+id/trailDescriptionDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    	</LinearLayout>
+    	<LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutDescriptionRight" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+    		<TextView android:text="@string/detail_na" android:id="@+id/detailTrailDescription" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    	</LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayoutRow4" android:layout_height="wrap_content" android:layout_weight="0.10">
+    	<LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutInfoLeft" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+    		<TextView android:text="@string/detail_infos" android:id="@+id/trailInfoDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    	</LinearLayout>
+    	<LinearLayout android:layout_width="wrap_content" android:id="@+id/linearLayoutInfoRight" android:layout_height="match_parent" android:orientation="vertical" android:layout_weight="0.06">
+    		 <TextView android:text="@string/detail_na" android:id="@+id/detailTrailInfo" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    	</LinearLayout>
+    </LinearLayout>
+</LinearLayout>

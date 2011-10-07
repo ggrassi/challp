@@ -90,7 +90,7 @@ public class StartScreen extends Activity {
 				parser.join();
 
 				if (shouldStartTabContainer) {
-					Intent ac = new Intent(".activities.TabHead");
+					Intent ac = new Intent(".activities.TabContainer");
 					startActivity(ac);
 				}
 			} catch (Exception e) {

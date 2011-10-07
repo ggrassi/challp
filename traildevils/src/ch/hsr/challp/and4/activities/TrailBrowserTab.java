@@ -3,15 +3,14 @@ package ch.hsr.challp.and4.activities;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import ch.hsr.challp.and4.adapter.BrowserListAdapter;
 import ch.hsr.challp.and4.domain.Trail;
-
 
 public class TrailBrowserTab extends ListActivity {
 	private ArrayList<Trail> trails = null;
@@ -24,7 +23,7 @@ public class TrailBrowserTab extends ListActivity {
 		setContentView(ch.hsr.challp.and4.R.layout.list_view);
 
 		trails = Trail.getTrails();
-
+		
 		this.t_adapter = new BrowserListAdapter(this,
 				ch.hsr.challp.and4.R.layout.list_entry, trails);
 		setListAdapter(this.t_adapter);
@@ -35,15 +34,12 @@ public class TrailBrowserTab extends ListActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// When clicked, show a toast with the TextView text
-
-				// TODO
-
-				Toast.makeText(getApplicationContext(), "hallo",
-						Toast.LENGTH_SHORT).show();
+				
+				Intent ac = new Intent(".activities.TrailDetail");
+				ac.putExtra("key", trails.get(position).getTrailId());
+				startActivity(ac);
 			}
 		});
-
 	}
 	/*
 
