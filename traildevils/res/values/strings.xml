@@ -6,6 +6,7 @@
     <string name="no_trails">No Trails available</string>
     <string name="trail_browser_tab_title">Trail Browser</string>
     <string name="map_tab_title">Karte</string>
+    <string name="favorites_tab_title">Favoriten</string>
     <string name="detail_na">N.A. </string>
     <string name="detail_title">Name: </string>
     <string name="detail_description">Beschreibung: </string>
