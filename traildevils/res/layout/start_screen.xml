@@ -22,7 +22,7 @@
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:id="@+id/imageView1" android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true" android:layout_marginLeft="20dp"
-			android:layout_marginRight="20dp" android:layout_marginTop="35dp" android:clickable="true" android:onClick="goToGPSView"></ImageView>
+			android:layout_marginRight="20dp" android:layout_marginTop="35dp"></ImageView>
 		<TextView android:id="@+id/wait_text" android:layout_width="wrap_content"
 			android:text="Download data..." android:layout_height="wrap_content"
 			android:textSize="12dp"

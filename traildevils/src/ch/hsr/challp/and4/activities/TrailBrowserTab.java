@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.adapter.BrowserListAdapter;
 import ch.hsr.challp.and4.domain.Trail;
 
@@ -20,12 +21,12 @@ public class TrailBrowserTab extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(ch.hsr.challp.and4.R.layout.list_view);
+		setContentView(R.layout.list_view);
 
 		trails = Trail.getTrails();
 		
 		this.t_adapter = new BrowserListAdapter(this,
-				ch.hsr.challp.and4.R.layout.list_entry, trails);
+				R.layout.list_entry, trails);
 		setListAdapter(this.t_adapter);
 
 		ListView lv = getListView();

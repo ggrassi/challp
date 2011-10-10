@@ -10,7 +10,7 @@ public class TabContainer extends TabActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(ch.hsr.challp.and4.R.layout.tab);
+		setContentView(R.layout.tab);
 		TabHost tabHost = getTabHost();
 		TabHost.TabSpec spec;
 		Intent intent;

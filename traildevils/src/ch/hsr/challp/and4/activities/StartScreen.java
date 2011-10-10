@@ -3,30 +3,24 @@ package ch.hsr.challp.and4.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 
 public class StartScreen extends Activity {
+	private static Object locationService = null;
+
 	private boolean shouldStartTabContainer = true;
 	private Controller controller;
 	private TextView textViewToChange;
-
-	public void goToGPSView(View v) {
-		shouldStartTabContainer = false;
-
-		Intent ac = new Intent(".activities.GPSTest");
-		startActivity(ac);
-
-		finish();
+	
+	public static Object getLocationService() {
+		return locationService;
 	}
 
 	@Override
@@ -34,12 +28,11 @@ public class StartScreen extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.start_screen);
-
+		
 		setWaitText("Getting Position...");
-		LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		LocationListener mlocListener = new UserLocationListener();
-		mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-				mlocListener);
+		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
+		locationService = tmpLocationService;
+		UserLocationListener.getInstance();
 
 		controller = new Controller(handler);
 		controller.start();
