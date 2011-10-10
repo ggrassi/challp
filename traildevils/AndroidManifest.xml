@@ -19,7 +19,12 @@
 		<activity android:name=".activities.TrailBrowserTab"
 			android:theme="@android:style/Theme.Black.NoTitleBar" />
 		<activity android:name=".activities.MapTab"
-			android:theme="@android:style/Theme.Black.NoTitleBar" />
+			android:theme="@android:style/Theme.Black.NoTitleBar" >
+			<intent-filter>
+				<category android:name="android.intent.category.EMBED" />
+				<action android:name=".activities.Main" />
+			</intent-filter>
+		</activity>
 		<activity android:name=".activities.TrailDetail"
 			android:theme="@android:style/Theme.Black.NoTitleBar">
 			<intent-filter>
@@ -29,8 +34,9 @@
 		</activity>
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 	<uses-library android:name="com.google.android.maps" />
 </manifest>

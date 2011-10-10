@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/mapLayout"
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
@@ -13,6 +14,4 @@
                  android:clickable="true"
                  android:apiKey="00se8N-0X-BrnmjPpvp2bf26zMjFEaTnBxjWVRw"
                  />
-  
-    
-</FrameLayout>
+</RelativeLayout>
