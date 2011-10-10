@@ -1,0 +1,6 @@
+HSR - Koordinaten:
+
+Latitude: 47,223611
+Longitude: 8,818056
+
+Window -> Show View -> Other... -> Emulator Control
