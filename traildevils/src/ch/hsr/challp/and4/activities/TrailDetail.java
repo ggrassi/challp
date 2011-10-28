@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.domain.Trail;
-import ch.hsr.challp.and4.domain.weather.GoogleWeatherHandler;
-import ch.hsr.challp.and4.domain.weather.WeatherSet;
+import ch.hsr.challp.and4.technicalservices.weather.*;
 
 public class TrailDetail extends Activity{
 	
@@ -43,7 +42,11 @@ public class TrailDetail extends Activity{
 			
 			this.country = activeTrail.getCountry();
 			this.city = activeTrail.getNextCity();
-			setWeather();
+			try {
+				setWeather();
+			} catch (Exception e) {
+				// TODO VETSCH!!!
+			}
 			
 			
 			ImageView img = (ImageView)findViewById(R.id.trailImage);
@@ -66,7 +69,7 @@ public class TrailDetail extends Activity{
 		}
 	}
 	
-	private void setWeather(){
+	private void setWeather() throws Exception{
 		URL imgURLTomorrow = getIconWeatherURL(0);
 		URL imgURLAfterTomorrow = getIconWeatherURL(1);
 		URL imgURLAfterAfterTomorrow = getIconWeatherURL(2);

@@ -48,10 +48,10 @@ public class MapTab extends MapActivity {
 		// mapOverlay.add(trailizedOverlay);
 
 		for (Trail trail : Trail.getTrails()) {
-			point = new GeoPoint((int) (trail.getGmapX() * 1E6), (int) (trail
-					.getGmapY() * 1E6));
-			overlayItem = new OverlayItem(point, trail.getName(), trail
-					.getDescription());
+			point = new GeoPoint((int) (trail.getGmapX() * 1E6),
+					(int) (trail.getGmapY() * 1E6));
+			overlayItem = new OverlayItem(point, trail.getName(),
+					trail.getDescription());
 			trailizedOverlay.addOverlayItem(overlayItem);
 
 		}
@@ -66,9 +66,9 @@ public class MapTab extends MapActivity {
 			@Override
 			public void onLocationChanged(Location newPosition) {
 				super.onLocationChanged(newPosition);
-				final GeoPoint myPosition = new GeoPoint((int) (newPosition
-						.getLatitude() * 1E6), (int) (newPosition
-						.getLongitude() * 1E6));
+				final GeoPoint myPosition = new GeoPoint(
+						(int) (newPosition.getLatitude() * 1E6),
+						(int) (newPosition.getLongitude() * 1E6));
 
 				mapCtrl.animateTo(myPosition);
 			}
