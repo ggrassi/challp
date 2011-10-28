@@ -28,7 +28,7 @@ public class TrailDetail extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(ch.hsr.challp.and4.R.layout.detail_view);
+		setContentView(R.layout.detail_view);
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null){

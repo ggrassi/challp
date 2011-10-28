@@ -107,14 +107,11 @@ public class Trail {
 	public Trail(JSONObject trailJson) {
 		try {
 			converte(trailJson);
-			
+
 			trails.add(this);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			Log.d("tag",
-					Thread.currentThread().getStackTrace()[3].getLineNumber()
-							+ "");
-
+			Log.d("tag", "filtrino: " + e.toString() + "");
 		}
 	}
 
@@ -134,7 +131,11 @@ public class Trail {
 		imageUrl800 = trailJson.getString("ImageUrl800");
 		info = trailJson.getString("Info");
 		isCommercial = trailJson.getBoolean("IsCommercial");
-		isOpen = trailJson.getBoolean("IsOpen");
+		try {
+			isOpen = trailJson.getBoolean("IsOpen");
+		} catch (Exception e) {
+			isOpen = false;
+		}
 		journey = trailJson.getString("Journey");
 		name = trailJson.getString("Name");
 		nextCity = trailJson.getString("NextCity");
