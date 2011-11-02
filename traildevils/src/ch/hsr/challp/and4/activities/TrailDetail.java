@@ -3,6 +3,12 @@ package ch.hsr.challp.and4.activities;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,8 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.technicalservices.weather.*;
 
 public class TrailDetail extends Activity{
+	
+	private String city;
+	private String country;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -30,21 +40,59 @@ public class TrailDetail extends Activity{
 				}
 			}
 			
+			this.country = activeTrail.getCountry();
+			this.city = activeTrail.getNextCity();
+			try {
+				setWeather();
+			} catch (Exception e) {
+				// TODO VETSCH!!!
+			}
+			
+			
 			ImageView img = (ImageView)findViewById(R.id.trailImage);
 			TextView name = (TextView)findViewById(R.id.detailTrailName);
-			TextView country = (TextView)findViewById(R.id.detailTrailCountry);
-			TextView description = (TextView)findViewById(R.id.detailTrailDescription);
-			TextView info = (TextView)findViewById(R.id.detailTrailInfo);
+			TextView countryView = (TextView)findViewById(R.id.detailTrailCountry);
+			TextView descriptionView = (TextView)findViewById(R.id.detailTrailDescription);
+			TextView infoView = (TextView)findViewById(R.id.detailTrailInfo);
 			
-			Drawable drawable = loadImage(activeTrail.getImageUrl800());
+			Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
+			img.setImageDrawable(trailDraw);
+			
+			
 			
 			name.setText(activeTrail.getName());
-			country.setText(activeTrail.getCountry());
-			description.setText(activeTrail.getDescription());
-			info.setText(Html.fromHtml(activeTrail.getInfo()).toString());
+			countryView.setText(country);
+			descriptionView.setText(activeTrail.getDescription());
+			infoView.setText(Html.fromHtml(activeTrail.getInfo()).toString());
 			
-		    img.setImageDrawable(drawable);
+		    
 		}
+	}
+	
+	private void setWeather() throws Exception{
+		URL imgURLTomorrow = getIconWeatherURL(0);
+		URL imgURLAfterTomorrow = getIconWeatherURL(1);
+		URL imgURLAfterAfterTomorrow = getIconWeatherURL(2);
+
+		ImageView weather_1 = (ImageView)findViewById(R.id.weather1);
+		ImageView weather_2 = (ImageView)findViewById(R.id.weather2);
+		ImageView weather_3 = (ImageView)findViewById(R.id.weather3);
+		
+		Drawable weather1Draw = loadImage(imgURLTomorrow.toString());
+		Drawable weather2Draw = loadImage(imgURLAfterTomorrow.toString());
+		Drawable weather3Draw = loadImage(imgURLAfterAfterTomorrow.toString());
+		
+		weather_1.setImageDrawable(weather1Draw);
+		weather_2.setImageDrawable(weather2Draw);
+		weather_3.setImageDrawable(weather3Draw);
+		
+		TextView celcius_1 = (TextView)findViewById(R.id.celcius1);
+		TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
+		TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
+		
+		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
+		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
+		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
 	}
 
 	private Drawable loadImage(String url)
@@ -58,4 +106,44 @@ public class TrailDetail extends Activity{
              return null;
          }
     }
+	
+	private URL getIconWeatherURL(int day){
+		try{
+			WeatherSet ws = getWeatherSet();
+			return new URL("http://www.google.com" + ws.getWeatherForecastConditions().get(day).getIconURL());
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	private WeatherSet getWeatherSet(){
+		try{
+			String queryString = "http://www.google.com/ig/api?weather=" + city + "," + country;
+			URL url = new URL(queryString.replace(" ", "%20"));
+			
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			SAXParser sp = spf.newSAXParser();
+			XMLReader xr = sp.getXMLReader();
+			GoogleWeatherHandler gwh = new GoogleWeatherHandler();
+			xr.setContentHandler(gwh);
+			xr.parse(new InputSource(url.openStream()));			
+			return gwh.getWeatherSet();			
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	private int getMaxTemp(int day){
+		return getWeatherSet().getWeatherForecastConditions().get(day).getTempMaxCelsius();
+	}
+	
+	private int getMinTemp(int day){
+		return getWeatherSet().getWeatherForecastConditions().get(day).getTempMinCelsius();
+	}
+	
+	private String getDayOfWeek(int day){
+		return getWeatherSet().getWeatherForecastConditions().get(day).getDayofWeek();
+	}
+	
+	
 }
