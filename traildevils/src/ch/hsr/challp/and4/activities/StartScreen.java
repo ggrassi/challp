@@ -18,7 +18,7 @@ public class StartScreen extends Activity {
 	private boolean shouldStartTabContainer = true;
 	private Controller controller;
 	private TextView textViewToChange;
-	
+
 	public static Object getLocationService() {
 		return locationService;
 	}
@@ -28,7 +28,7 @@ public class StartScreen extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.start_screen);
-		
+
 		setWaitText("Getting Position...");
 		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
 		locationService = tmpLocationService;

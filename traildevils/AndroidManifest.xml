@@ -20,6 +20,8 @@
 			android:theme="@android:style/Theme.Black.NoTitleBar" />
 		<activity android:name=".activities.MapTab"
 			android:theme="@android:style/Theme.Black.NoTitleBar" />
+		<activity android:name=".activities.FavoritesTab"
+			android:theme="@android:style/Theme.Black.NoTitleBar" />
 		<activity android:name=".activities.TrailDetail"
 			android:theme="@android:style/Theme.Black.NoTitleBar">
 			<intent-filter>
