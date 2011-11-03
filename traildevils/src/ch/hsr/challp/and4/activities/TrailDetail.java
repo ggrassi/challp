@@ -13,26 +13,34 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
 import ch.hsr.challp.and4.technicalservices.weather.*;
 
 public class TrailDetail extends Activity{
 	
 	private String city;
 	private String country;
+	private Trail activeTrail;
+	private Favorites favs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		favs = new Favorites(getApplicationContext());
+		
 		setContentView(R.layout.detail_view);
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null){
 			Integer trailId = extras.getInt("key");
-			Trail activeTrail = null;
+			activeTrail = null;
 			
 			for(Trail t: Trail.getTrails()){
 				if(t.getTrailId()==trailId){
@@ -65,7 +73,30 @@ public class TrailDetail extends Activity{
 			descriptionView.setText(activeTrail.getDescription());
 			infoView.setText(Html.fromHtml(activeTrail.getInfo()).toString());
 			
-		    
+			Button btn = (Button)findViewById(R.id.fav_button);
+			
+			if(favs.isFavorite(activeTrail)){
+				btn.setCompoundDrawables(null, null, getResources()
+						.getDrawable(R.drawable.ic_tab_favorites_saved), null);
+
+			} else {
+				btn.setCompoundDrawables(null, null, getResources()
+						.getDrawable(R.drawable.ic_tab_favorites_selected),null);
+			}
+
+			btn.setOnClickListener(new OnClickListener() {	
+				public void onClick(View v) {
+					handleFavorite();
+				}
+			});	    
+		}
+	}
+	
+	private void handleFavorite(){
+		if(favs.isFavorite(activeTrail)){
+			favs.removeTrail(activeTrail);
+		}else{
+			favs.addTrail(activeTrail);
 		}
 	}
 	

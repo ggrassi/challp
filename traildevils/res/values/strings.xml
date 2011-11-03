@@ -12,4 +12,5 @@
     <string name="detail_description">Beschreibung: </string>
     <string name="detail_country">Land: </string>
     <string name="detail_infos">Infos: </string>
+    <string name="detail_button_fav">Favorite</string>
 </resources>
