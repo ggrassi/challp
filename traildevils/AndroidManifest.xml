@@ -27,15 +27,9 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-<<<<<<< HEAD
-	<uses-library android:name="com.google.android.maps" />
-	</application>
-	<uses-permission android:name="android.permission.INTERNET" />
-=======
 		<uses-library android:name="com.google.android.maps" />
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
->>>>>>> e437719bb7119f4e9ff6f666d679d6c35bbddd84
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
