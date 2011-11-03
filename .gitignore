@@ -18,4 +18,5 @@ gen/
 local.properties
 .classpath
 
+.project
 default.properties
