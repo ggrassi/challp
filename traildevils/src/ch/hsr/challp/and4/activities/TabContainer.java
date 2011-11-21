@@ -8,7 +8,6 @@ import ch.hsr.challp.and4.R;
 
 public class TabContainer extends TabActivity {
 	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,6 +31,7 @@ public class TabContainer extends TabActivity {
 		spec = tabHost.newTabSpec("favorites_tab").setIndicator(this.getString(R.string.favorites_tab_title), getResources().getDrawable(R.drawable.ic_tab_favorites))
 				.setContent(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 		tabHost.addTab(spec);
+		
 	}
 
 }

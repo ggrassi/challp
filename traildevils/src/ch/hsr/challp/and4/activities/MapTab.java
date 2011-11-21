@@ -27,15 +27,21 @@ public class MapTab extends MapActivity {
 	private GeoPoint point;
 	private OverlayItem overlayItem;
 
+	// private AdView adView;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
+
 		initMapView();
 		initMyLocationOverlay();
 		initTrailOverlay();
+
+
 	}
+
 
 	private void initTrailOverlay() {
 		mapOverlay = mapView.getOverlays();
@@ -99,12 +105,14 @@ public class MapTab extends MapActivity {
 		// mapView.setStreetView(true);
 	}
 
+	@Override
 	protected void onPause() {
 		super.onPause();
 		myLocationOverlay.disableMyLocation();
 		myLocationOverlay.disableCompass();
 	}
 
+	@Override
 	protected void onResume() {
 		myLocationOverlay.enableMyLocation();
 		myLocationOverlay.enableCompass();

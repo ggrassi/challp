@@ -39,6 +39,7 @@ public class StartScreen extends Activity {
 	}
 
 	final Handler handler = new Handler() {
+		@Override
 		public void handleMessage(Message msg) {
 			String message;
 			switch (msg.arg1) {
@@ -74,6 +75,7 @@ public class StartScreen extends Activity {
 			myH = h;
 		}
 
+		@Override
 		public void run() {
 			try {
 
