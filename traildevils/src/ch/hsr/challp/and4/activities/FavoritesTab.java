@@ -1,7 +1,5 @@
 package ch.hsr.challp.and4.activities;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +8,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import ch.hsr.challp.and4.R;
-import ch.hsr.challp.and4.adapter.BrowserListAdapter;
-import ch.hsr.challp.and4.domain.Trail;
-import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
+import ch.hsr.challp.and4.adapter.FavoritesListAdapter;
+import ch.hsr.challp.and4.application.TrailDevils;
 
 public class FavoritesTab extends ListActivity {
-	private ArrayList<Trail> trails = null;
-	private BrowserListAdapter t_adapter = null;
+	private FavoritesListAdapter t_adapter = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -24,10 +20,10 @@ public class FavoritesTab extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_view);
 
-		trails = new Favorites(getApplicationContext()).getTrails();
-		
-		this.t_adapter = new BrowserListAdapter(this,
-				R.layout.list_entry, trails);
+		TrailDevils app = ((TrailDevils) getApplication());
+
+		this.t_adapter = new FavoritesListAdapter(this, R.layout.list_entry,
+				app);
 		setListAdapter(this.t_adapter);
 
 		ListView lv = getListView();
@@ -36,9 +32,9 @@ public class FavoritesTab extends ListActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
+
 				Intent ac = new Intent(".activities.TrailDetail");
-				ac.putExtra("key", trails.get(position).getTrailId());
+				ac.putExtra("key", t_adapter.getItem(position).getTrailId());
 				startActivity(ac);
 			}
 		});

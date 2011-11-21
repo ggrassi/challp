@@ -1,11 +1,12 @@
 package ch.hsr.challp.and4.technicalservices.favorites;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 import android.content.Context;
 import ch.hsr.challp.and4.domain.Trail;
 
-public class Favorites {
+public class Favorites extends Observable {
 	private FavoritesDBHelper helper = null;
 
 	public Favorites(Context context) {
@@ -14,10 +15,14 @@ public class Favorites {
 
 	public void addTrail(Trail trail) {
 		helper.addId(trail.getTrailId());
+		setChanged();
+		notifyObservers();
 	}
 
 	public void removeTrail(Trail trail) {
 		helper.removeId(trail.getTrailId());
+		setChanged();
+		notifyObservers();
 	}
 
 	public ArrayList<Trail> getTrails() {

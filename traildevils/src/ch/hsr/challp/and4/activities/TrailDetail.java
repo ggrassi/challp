@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.hsr.challp.and4.R;
+import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
 import ch.hsr.challp.and4.technicalservices.weather.*;
@@ -33,7 +34,7 @@ public class TrailDetail extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		favs = new Favorites(getApplicationContext());
+		favs = ((TrailDevils) getApplication()).getFavorites();
 		
 		setContentView(R.layout.detail_view);
 		
