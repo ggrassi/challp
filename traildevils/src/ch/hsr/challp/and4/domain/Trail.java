@@ -10,6 +10,15 @@ import android.text.Html;
 import android.util.Log;
 
 public class Trail {
+	private static ArrayList<Trail> trails = new ArrayList<Trail>();
+	private int countryId, favorits, trailId;
+	float gmapX;
+	float gmapY;
+	private Date creationDate, lastModified;
+	private String country, description, imageUrl120, imageUrl800, info,
+			journey, name, nextCity, state, url;
+	private boolean isCommercial, isOpen;
+
 	@Override
 	public String toString() {
 		return "Trail [countryId=" + countryId + ", favorits=" + favorits
@@ -45,6 +54,14 @@ public class Trail {
 
 	public Date getCreationDate() {
 		return creationDate;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	public String getCountry() {
@@ -95,15 +112,6 @@ public class Trail {
 		return isOpen;
 	}
 
-	private static ArrayList<Trail> trails = new ArrayList<Trail>();
-	private int countryId, favorits, trailId;
-	float gmapX;
-	float gmapY;
-	private Date creationDate;
-	private String country, description, imageUrl120, imageUrl800, info,
-			journey, name, nextCity, state, url;
-	private boolean isCommercial, isOpen;
-
 	public Trail(JSONObject trailJson) {
 		try {
 			converte(trailJson);
@@ -120,9 +128,11 @@ public class Trail {
 	}
 
 	private void converte(JSONObject trailJson) throws JSONException {
+		trailId = trailJson.getInt("Id");
 		country = trailJson.getString("Country");
 		countryId = trailJson.getInt("CountryId");
 		creationDate = createDateFromJson(trailJson.getString("CreatedDate"));
+		setLastModified(createDateFromJson(trailJson.getString("ModifiedDate")));
 		description = trailJson.getString("Desc");
 		favorits = trailJson.getInt("Favorits");
 		gmapX = (float) (trailJson.getDouble("GmapX"));
@@ -140,7 +150,6 @@ public class Trail {
 		name = trailJson.getString("Name");
 		nextCity = trailJson.getString("NextCity");
 		state = trailJson.getString("State");
-		trailId = trailJson.getInt("TrailId");
 		url = trailJson.getString("Url");
 	}
 
