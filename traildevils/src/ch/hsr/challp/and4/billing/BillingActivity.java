@@ -47,7 +47,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.hsr.challp.and4.R;
+import ch.hsr.challp.and.R;
 import ch.hsr.challp.and4.billing.BillingService.RequestPurchase;
 import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
 import ch.hsr.challp.and4.billing.Consts.PurchaseState;
@@ -215,9 +215,9 @@ public class BillingActivity extends Activity implements OnClickListener,
 
 	/** An array of product list entries for the products that can be purchased. */
 	private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
-			new CatalogEntry("sword_001", R.string.two_handed_sword,
+			new CatalogEntry("01navigation", R.string.navigation,
 					Managed.MANAGED),
-			new CatalogEntry("potion_001", R.string.potions, Managed.UNMANAGED),
+			new CatalogEntry("01bikegame", R.string.bike_game, Managed.UNMANAGED),
 			new CatalogEntry("android.test.purchased",
 					R.string.android_test_purchased, Managed.UNMANAGED),
 			new CatalogEntry("android.test.canceled",

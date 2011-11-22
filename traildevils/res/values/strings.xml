@@ -7,16 +7,16 @@
     <string name="no_trails">No Trails available</string>
     <string name="trail_browser_tab_title">Trail Browser</string>
     <string name="map_tab_title">Karte</string>
-    <string name="buy_tab_title">Kaufen</string>
     <string name="favorites_tab_title">Favoriten</string>
     <string name="detail_na">N.A. </string>
     <string name="detail_title">Name: </string>
     <string name="detail_description">Beschreibung: </string>
     <string name="detail_country">Land: </string>
     <string name="detail_infos">Infos: </string>
+    <string name="furz">furz</string>
     <string name="detail_button_fav">Favorite</string>
     <string name="adMob_ID">a14ebbc9a2dcdb5</string>
-     <string name="welcome">Welcome to the Sample store!</string>
+    <string name="welcome">Welcome to the Sample store!</string>
     <string name="billing_not_supported_title">Can\'t make purchases</string>
     <string name="billing_not_supported_message">The Market billing
      service is not available at this time.  You can continue to use this app but you
@@ -28,7 +28,7 @@
      won\'t be able to make purchases.</string>
     <string name="restoring_transactions">Restoring transactions</string>
     <string name="learn_more">Learn more</string>
-    <string name="help_url" formatted="false">http://market.android.com/support/bin/answer.py?answer=1050566&amp;hl=%lang%&amp;dl=%region%</string>
+    <string formatted="false" name="help_url">http://market.android.com/support/bin/answer.py?answer=1050566&amp;hl=%lang%&amp;dl=%region%</string>
     <string name="buy">Buy</string>
     <string name="select_item">Select an item</string>
     <string name="edit_payload">Edit Payload</string>
@@ -38,14 +38,24 @@
     <string name="items_for_sale">Items for sale</string>
     <string name="items_you_own">Items you own</string>
     <string name="recent_transactions">Recent activity</string>
-
-    <string name="two_handed_sword">Two-handed sword</string>
-    <string name="potions">Potions</string>
+    <string name="buy_tab_title">Kaufen</string>
+    <string name="bike_game">Bike Game</string>
+    <string name="navigation">Navigation</string>
 
     <!-- The following are reserved skus defined by Market for testing. -->
     <string name="android_test_canceled">android.test.canceled</string>
     <string name="android_test_purchased">android.test.purchased</string>
     <string name="android_test_item_unavailable">android.test.item unavailable</string>
     <string name="android_test_refunded">android.test.refunded</string>
+    <string name="check_license">Check license</string>
+    <string name="checking_license">Checking license...</string>
+    <string name="dont_allow">Don\'t allow the user access</string>
+    <string name="allow">Allow the user access</string>
+    <string name="application_error">Application error: %1$s</string>
+    <!-- Unlicensed dialog messages -->
+    <string name="unlicensed_dialog_title">Application not licensed</string>
+    <string name="unlicensed_dialog_body">This application is not licensed. Please purchase it from Android Market.</string>
+    <string name="buy_button">Buy app</string>
+    <string name="quit_button">Exit</string>
 
 </resources>

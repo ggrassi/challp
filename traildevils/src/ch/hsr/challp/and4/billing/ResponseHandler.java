@@ -11,6 +11,7 @@ import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
 import ch.hsr.challp.and4.billing.Consts.PurchaseState;
 import ch.hsr.challp.and4.billing.Consts.ResponseCode;
 
+
 /**
  * This class contains the methods that handle responses from Android Market.  The
  * implementation of these methods is specific to a particular application.

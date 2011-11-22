@@ -1,6 +1,5 @@
 package ch.hsr.challp.and4.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
-import ch.hsr.challp.and4.R;
+import android.widget.Toast;
+import ch.hsr.challp.and.R;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 
-public class StartScreen extends Activity {
+public class StartScreen extends LicenseCheckActivity {
 	private static Object locationService = null;
 
 	private boolean shouldStartTabContainer = true;
@@ -29,6 +29,12 @@ public class StartScreen extends Activity {
 
 		setContentView(R.layout.start_screen);
 
+
+        Toast.makeText(this, "Checking Application License", Toast.LENGTH_SHORT).show();
+        // Check the license
+        checkLicense();
+		
+		
 		setWaitText("Getting Position...");
 		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
 		locationService = tmpLocationService;

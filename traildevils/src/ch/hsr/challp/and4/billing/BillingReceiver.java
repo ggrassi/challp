@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.util.Log;
 import ch.hsr.challp.and4.billing.Consts.ResponseCode;
 
+
 /**
  * This class implements the broadcast receiver for in-app billing. All asynchronous messages from
  * Android Market come to this app through this receiver. This class forwards all

@@ -17,6 +17,7 @@ import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
 import ch.hsr.challp.and4.billing.Consts.PurchaseState;
 import ch.hsr.challp.and4.billing.Consts.ResponseCode;
 
+
 /**
  * An interface for observing changes related to purchases. The main application
  * extends this class and registers an instance of that derived class with
