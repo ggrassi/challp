@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:windowBackground="@null">
-  
-  <com.google.android.maps.MapView
-  				 android:id="@+id/mapview"
-                 android:layout_width="fill_parent"
-                 android:layout_height="fill_parent"
-                 android:clickable="true"
-                 android:apiKey="00se8N-0X-BrnmjPpvp2bf26zMjFEaTnBxjWVRw"
-                 />
-  
-    
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:id="@+id/mapframe"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:windowBackground="@null" >
+
+    <com.google.android.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="00se8N-0X-BrnmjPpvp2bf26zMjFEaTnBxjWVRw"
+        android:clickable="true" />
+	
+     <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <com.mobclix.android.sdk.MobclixMMABannerXLAdView
+	        android:id="@+id/adView"
+	        android:layout_height="50dp"
+	        android:layout_width="320dp"
+	        android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+	        android:tag="adspace"
+	    />
+    </RelativeLayout>
+
 </FrameLayout>
