@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
 import ch.hsr.challp.and4.R;
+import ch.hsr.challp.and4.billing.Billing;
 
 public class TabContainer extends TabActivity {
 	
@@ -30,6 +31,11 @@ public class TabContainer extends TabActivity {
 		intent = new Intent().setClass(this, FavoritesTab.class);
 		spec = tabHost.newTabSpec("favorites_tab").setIndicator(this.getString(R.string.favorites_tab_title), getResources().getDrawable(R.drawable.ic_tab_favorites))
 				.setContent(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+		tabHost.addTab(spec);
+		
+		intent = new Intent().setClass(this.getApplicationContext(), Billing.class);
+		spec = tabHost.newTabSpec("dif_things").setIndicator(this.getString(R.string.buy_tab_title), getResources().getDrawable(R.drawable.ic_tab_map))
+				.setContent(intent);
 		tabHost.addTab(spec);
 		
 	}

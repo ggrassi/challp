@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="hello">Hello World, BrowserActivity!</string>
     <string name="app_name">traildevils.ch</string>
     <string name="JSONUrl">http://152.96.80.18:8080/api/trails</string>
@@ -13,4 +14,36 @@
     <string name="detail_country">Land: </string>
     <string name="detail_infos">Infos: </string>
     <string name="detail_button_fav">Favorite</string>
+    <string name="welcome">Welcome to the Sample store!</string>
+    <string name="billing_not_supported_title">Can\'t make purchases</string>
+    <string name="billing_not_supported_message">The Market billing
+     service is not available at this time.  You can continue to use this app but you
+     won\'t be able to make purchases.</string>
+    <string name="cannot_connect_title">Can\'t connect to Market</string>
+    <string name="cannot_connect_message">This app cannot connect to Market.
+     Your version of Market may be out of date.
+     You can continue to use this app but you
+     won\'t be able to make purchases.</string>
+    <string name="restoring_transactions">Restoring transactions</string>
+    <string name="learn_more">Learn more</string>
+    <string formatted="false" name="help_url">http://market.android.com/support/bin/answer.py?answer=1050566&amp;hl=%lang%&amp;dl=%region%</string>
+    <string name="buy">Buy</string>
+    <string name="select_item">Select an item</string>
+    <string name="edit_payload">Edit Payload</string>
+    <string name="edit_payload_title">Edit the developer payload associated with this purchase</string>
+    <string name="edit_payload_accept">Set</string>
+    <string name="edit_payload_clear">No Payload</string>
+    <string name="items_for_sale">Items for sale</string>
+    <string name="items_you_own">Items you own</string>
+    <string name="recent_transactions">Recent activity</string>
+    <string name="buy_tab_title">Kaufen</string>
+    <string name="two_handed_sword">Two-handed sword</string>
+    <string name="potions">Potions</string>
+
+    <!-- The following are reserved skus defined by Market for testing. -->
+    <string name="android_test_canceled">android.test.canceled</string>
+    <string name="android_test_purchased">android.test.purchased</string>
+    <string name="android_test_item_unavailable">android.test.item unavailable</string>
+    <string name="android_test_refunded">android.test.refunded</string>
+
 </resources>
