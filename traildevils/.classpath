@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/home/ggrassi/Downloads/Mobclix SDK 3.1.4 for Android/Mobclix Android SDK/mobclix.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="mobclix.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
