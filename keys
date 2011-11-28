@@ -1,0 +1,33 @@
+Mapkey:
+00se8N-0X-BrnmjPpvp2bf26zMjFEaTnBxjWVRw
+
+based on:
+
+Fingerprint on debug.keystore
+24:C0:F1:BA:4F:7A:D5:82:EE:88:8B:67:55:D3:13:D6
+
+How to include in xml:
+<com.google.android.maps.MapView
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:apiKey="00se8N-0X-BrnmjPpvp2bf26zMjFEaTnBxjWVRw"
+                 />
+
+
+
+Androidmarket Public Key:
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlACy0E7liDT1UYG5FncfBzPNOQj3Qwo2IyFm8oY6Bi+4eonV3v6nfN3EOwaf5Quz2gfq6spN78UDGZU0QNYxSB1qtffk7XzTW0HMuyq+Dq347+tBtAOTf4oyUpa6PK4jlo2pSToj7abF2Z2w0YhPepLyErEySn1okZh2KswOPDyrK/WM3odi2Y+7SFLhV6d5FxgGaF6p3r1n60Fy4f0b6nOiFORJVrCjhtzDyr6UCXdnz9i17KWxshxBy3ALByW7m8L8zN0KhcqhoUGJkQh01x6ZeT37VqM2d19WzjHRurFxG2X2mCJOrvhgqoBy7COzKvrPqWMaqxz2OqCO5zGXnQIDAQAB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
