@@ -38,6 +38,7 @@
 			android:value="AEB78937-1D1B-475D-8F99-04DBA3C678CC" />
 		<activity android:name="com.mobclix.android.sdk.MobclixBrowserActivity"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+			
 		<activity android:label="@string/app_name" android:name="ch.hsr.challp.and4.billing.Billing">
 			<intent-filter>
 				<action android:name="ch.hsr.challp.and4.billing.Billing" />
