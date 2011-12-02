@@ -1,16 +1,65 @@
 package ch.hsr.challp.and4.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.text.Html;
 import android.util.Log;
+import ch.hsr.challp.and4.technicalservices.database.TrailData;
 
-public class Trail {
-	private static ArrayList<Trail> trails = new ArrayList<Trail>();
+public class Trail implements Serializable {
+
+	public Trail() {
+
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public Trail(int countryId, int favorits, int trailId, float gmapX,
+			float gmapY, Date creationDate, Date lastModified, String country,
+			String description, String imageUrl120, String imageUrl800,
+			String info, String journey, String name, String nextCity,
+			String state, String url, boolean isCommercial, boolean isOpen,
+			TrailData trailData) {
+		super();
+		this.countryId = countryId;
+		this.favorits = favorits;
+		this.trailId = trailId;
+		this.gmapX = gmapX;
+		this.gmapY = gmapY;
+		this.creationDate = creationDate;
+		this.lastModified = lastModified;
+		this.country = country;
+		this.description = description;
+		this.imageUrl120 = imageUrl120;
+		this.imageUrl800 = imageUrl800;
+		this.info = info;
+		this.journey = journey;
+		this.name = name;
+		this.nextCity = nextCity;
+		this.state = state;
+		this.url = url;
+		this.isCommercial = isCommercial;
+		this.isOpen = isOpen;
+	}
+
+	public Trail(int trailId, Date creationDate, String name) {
+		super();
+		this.creationDate = creationDate;
+		this.trailId = trailId;
+		this.name = name;
+	}
+
+	private static HashMap<Integer, Trail> trails = new HashMap<Integer, Trail>();
 	private int countryId, favorits, trailId;
 	float gmapX;
 	float gmapY;
@@ -112,19 +161,31 @@ public class Trail {
 		return isOpen;
 	}
 
-	public Trail(JSONObject trailJson) {
+	public Trail(JSONObject trailJson, boolean fromDB) {
 		try {
 			converte(trailJson);
 
-			trails.add(this);
+			if (!fromDB) {
+				TrailData.getInstance().add(this);
+				TrailData.getInstance().close();
+			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			Log.d("tag", "filtrino: " + e.toString() + "");
 		}
 	}
 
 	public static ArrayList<Trail> getTrails() {
-		return trails;
+			trails = TrailData.getInstance().getAll();
+		TrailData.getInstance().close();
+		ArrayList<Trail> myTrail = new ArrayList<Trail>();
+		for (Integer trail : new TreeSet<Integer>(trails.keySet())) {
+			myTrail.add(trails.get(trail));
+			Log.d("tag", "filtrino: " + trails.get(trail).getName()
+					+ " hinzugefügt, neue Size: " + myTrail.size());
+
+		}
+		return myTrail;
+
 	}
 
 	private void converte(JSONObject trailJson) throws JSONException {
