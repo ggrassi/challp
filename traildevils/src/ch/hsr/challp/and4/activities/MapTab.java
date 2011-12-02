@@ -8,7 +8,6 @@ import android.os.Bundle;
 import ch.hsr.challp.and.R;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.TrailizedOverlay;
-import ch.hsr.challp.and4.technicalservices.database.TrailData;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
