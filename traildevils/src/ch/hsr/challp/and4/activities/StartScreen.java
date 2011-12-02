@@ -11,6 +11,7 @@ import android.widget.TextView;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
+import ch.hsr.challp.and4.technicalservices.database.TrailData;
 
 public class StartScreen extends Activity {
 	private static Object locationService = null;
@@ -36,6 +37,10 @@ public class StartScreen extends Activity {
 
 		controller = new Controller(handler);
 		controller.start();
+		
+		TrailData.initializeTrailData(getBaseContext());
+		TrailData.getInstance().truncate();
+		TrailData.getInstance().close();
 	}
 
 	final Handler handler = new Handler() {
@@ -79,6 +84,7 @@ public class StartScreen extends Activity {
 
 				JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
 						myH);
+				parser.setCtx(getBaseContext());
 				parser.start();
 				parser.join();
 

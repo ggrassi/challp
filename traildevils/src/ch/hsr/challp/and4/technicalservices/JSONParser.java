@@ -15,13 +15,23 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import ch.hsr.challp.and4.domain.Trail;
 
 public class JSONParser extends Thread {
+	public Context getCtx() {
+		return ctx;
+	}
+
+	public void setCtx(Context ctx) {
+		this.ctx = ctx;
+	}
+
 	String url;
 	Handler handler;
+	Context ctx;
 
 	public JSONParser(String url, Handler handler) {
 		this.url = url;
@@ -51,7 +61,7 @@ public class JSONParser extends Thread {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 				
 				@SuppressWarnings("unused")
-				Trail tmpTrail = new Trail(jsonObject);
+				Trail tmpTrail = new Trail(jsonObject, false);
 			}
 		} catch (Exception e) {
 			//TODO: Handle Excpetion

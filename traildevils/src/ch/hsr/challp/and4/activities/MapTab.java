@@ -8,6 +8,7 @@ import android.os.Bundle;
 import ch.hsr.challp.and4.R;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.TrailizedOverlay;
+import ch.hsr.challp.and4.technicalservices.database.TrailData;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -46,6 +47,7 @@ public class MapTab extends MapActivity {
 		// OverlayItem overlayItem = new OverlayItem(point, "", "");
 		// trailizedOverlay.addOverlayItem(overlayItem);
 		// mapOverlay.add(trailizedOverlay);
+		
 
 		for (Trail trail : Trail.getTrails()) {
 			point = new GeoPoint((int) (trail.getGmapX() * 1E6),
