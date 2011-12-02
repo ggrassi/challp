@@ -12,7 +12,8 @@ import org.xml.sax.XMLReader;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -22,7 +23,8 @@ import ch.hsr.challp.and.R;
 import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
-import ch.hsr.challp.and4.technicalservices.weather.*;
+import ch.hsr.challp.and4.technicalservices.weather.GoogleWeatherHandler;
+import ch.hsr.challp.and4.technicalservices.weather.WeatherSet;
 
 public class TrailDetail extends Activity{
 	
@@ -30,10 +32,18 @@ public class TrailDetail extends Activity{
 	private String country;
 	private Trail activeTrail;
 	private Favorites favs;
+	private Handler handler;
+	private WeatherSet ws = null;
+	private boolean weatherIsVisible = true;
+	private Drawable weather1Draw;
+	private Drawable weather2Draw;
+	private Drawable weather3Draw;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		handler = new Handler();
 		favs = ((TrailDevils) getApplication()).getFavorites();
 		
 		setContentView(R.layout.detail_view);
@@ -51,28 +61,18 @@ public class TrailDetail extends Activity{
 			
 			this.country = activeTrail.getCountry();
 			this.city = activeTrail.getNextCity();
-			try {
-				setWeather();
-			} catch (Exception e) {
-				// TODO VETSCH!!!
-			}
-			
 			
 			ImageView img = (ImageView)findViewById(R.id.trailImage);
 			TextView name = (TextView)findViewById(R.id.detailTrailName);
 			TextView countryView = (TextView)findViewById(R.id.detailTrailCountry);
 			TextView descriptionView = (TextView)findViewById(R.id.detailTrailDescription);
-			TextView infoView = (TextView)findViewById(R.id.detailTrailInfo);
 			
 			Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
 			img.setImageDrawable(trailDraw);
 			
-			
-			
 			name.setText(activeTrail.getName());
 			countryView.setText(country);
 			descriptionView.setText(activeTrail.getDescription());
-			infoView.setText(Html.fromHtml(activeTrail.getInfo()).toString());
 			
 			Button btn = (Button)findViewById(R.id.fav_button);
 			
@@ -89,7 +89,9 @@ public class TrailDetail extends Activity{
 				public void onClick(View v) {
 					handleFavorite();
 				}
-			});	    
+			});	 
+			
+			startWeaterInitialization();
 		}
 	}
 	
@@ -101,18 +103,24 @@ public class TrailDetail extends Activity{
 		}
 	}
 	
-	private void setWeather() throws Exception{
+	private void loadWeatherData(){
 		URL imgURLTomorrow = getIconWeatherURL(0);
 		URL imgURLAfterTomorrow = getIconWeatherURL(1);
 		URL imgURLAfterAfterTomorrow = getIconWeatherURL(2);
-
+		
+		if(imgURLTomorrow != null && imgURLAfterTomorrow != null && imgURLAfterAfterTomorrow != null){
+			weather1Draw = loadImage(imgURLTomorrow.toString());
+			weather2Draw = loadImage(imgURLAfterTomorrow.toString());
+			weather3Draw = loadImage(imgURLAfterAfterTomorrow.toString());
+		}else{
+			weatherIsVisible = false;
+		}
+	}
+	
+	private void setWeatherData() throws Exception{
 		ImageView weather_1 = (ImageView)findViewById(R.id.weather1);
 		ImageView weather_2 = (ImageView)findViewById(R.id.weather2);
 		ImageView weather_3 = (ImageView)findViewById(R.id.weather3);
-		
-		Drawable weather1Draw = loadImage(imgURLTomorrow.toString());
-		Drawable weather2Draw = loadImage(imgURLAfterTomorrow.toString());
-		Drawable weather3Draw = loadImage(imgURLAfterAfterTomorrow.toString());
 		
 		weather_1.setImageDrawable(weather1Draw);
 		weather_2.setImageDrawable(weather2Draw);
@@ -122,9 +130,9 @@ public class TrailDetail extends Activity{
 		TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
 		TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
 		
-		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"ï¿½/"+getMaxTemp(0)+"ï¿½");
-		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"ï¿½/"+getMaxTemp(1)+"ï¿½");
-		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"ï¿½/"+getMaxTemp(2)+"ï¿½");
+		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
+		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
+		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
 	}
 
 	private Drawable loadImage(String url)
@@ -134,16 +142,16 @@ public class TrailDetail extends Activity{
              Drawable d = Drawable.createFromStream(is, "src name");
              return d;
          }catch (Exception e) {
-             System.out.println("Exc="+e);
              return null;
          }
     }
 	
 	private URL getIconWeatherURL(int day){
-		try{
-			WeatherSet ws = getWeatherSet();
+		ws = getWeatherSet();
+		try {
 			return new URL("http://www.google.com" + ws.getWeatherForecastConditions().get(day).getIconURL());
-		}catch(Exception e){
+		} catch (Exception e) {
+			Log.v("Test", String.valueOf(ws.getSizeOfForeCast()));
 			return null;
 		}
 	}
@@ -159,7 +167,8 @@ public class TrailDetail extends Activity{
 			GoogleWeatherHandler gwh = new GoogleWeatherHandler();
 			xr.setContentHandler(gwh);
 			xr.parse(new InputSource(url.openStream()));			
-			return gwh.getWeatherSet();			
+			return gwh.getWeatherSet();
+			
 		}catch(Exception e){
 			return null;
 		}
@@ -174,8 +183,51 @@ public class TrailDetail extends Activity{
 	}
 	
 	private String getDayOfWeek(int day){
-		return getWeatherSet().getWeatherForecastConditions().get(day).getDayofWeek();
+		String shortDayName = getWeatherSet().getWeatherForecastConditions().get(day).getDayofWeek();
+		if(shortDayName.equals("Mon")){
+			return "Monday";
+		}
+		if(shortDayName.equals("Tue")){
+			return "Tuesday";
+		}
+		if(shortDayName.equals("Wed")){
+			return "Wednesday";
+		}
+		if(shortDayName.equals("Thu")){
+			return "Thursday";
+		}
+		if(shortDayName.equals("Fri")){
+			return "Friday";
+		}
+		if(shortDayName.equals("Sat")){
+			return "Saturday";
+		}
+		if(shortDayName.equals("Sun")){
+			return "Sunday";
+		}
+		return "";
 	}
 	
-	
+	public void startWeaterInitialization() {
+		Runnable runnable = new Runnable() {
+			public void run() {
+				loadWeatherData();
+				handler.post(new Runnable() {
+					public void run() {
+						try {
+							setWeatherData();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if(weatherIsVisible){
+							View weatherContainer = findViewById(R.id.weatherContainer);
+							weatherContainer.setVisibility(View.VISIBLE);
+						}
+					}
+				});
+			}
+		};
+		new Thread(runnable).start();
+	}
 }
