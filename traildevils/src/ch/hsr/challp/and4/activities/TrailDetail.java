@@ -151,7 +151,6 @@ public class TrailDetail extends Activity{
 		try {
 			return new URL("http://www.google.com" + ws.getWeatherForecastConditions().get(day).getIconURL());
 		} catch (Exception e) {
-			Log.v("Test", String.valueOf(ws.getSizeOfForeCast()));
 			return null;
 		}
 	}
