@@ -44,9 +44,6 @@ public class StartScreen extends LicenseCheckActivity {
 		controller = new Controller(handler);
 		controller.start();
 		
-		TrailData.initializeTrailData(getBaseContext());
-		TrailData.getInstance().truncate();
-		TrailData.getInstance().close();
 	}
 	
     @Override
@@ -94,13 +91,15 @@ public class StartScreen extends LicenseCheckActivity {
 		@Override
 		public void run() {
 			try {
-
-				JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
-						myH);
-				parser.setCtx(getBaseContext());
-				parser.start();
-				parser.join();
-
+				TrailData.initializeTrailData(getBaseContext());
+				if (TrailData.getInstance().isEmpty()){
+					JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
+							myH);
+					parser.setCtx(getBaseContext());
+					parser.start();
+					parser.join();
+				}
+				TrailData.getInstance().close();
 				if (shouldStartTabContainer) {
 					Intent ac = new Intent(".activities.TabContainer");
 					startActivity(ac);

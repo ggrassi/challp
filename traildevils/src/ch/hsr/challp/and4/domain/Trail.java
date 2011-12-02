@@ -59,7 +59,7 @@ public class Trail implements Serializable {
 		this.name = name;
 	}
 
-	private static HashMap<Integer, Trail> trails = new HashMap<Integer, Trail>();
+	private static HashMap<Integer, Trail> trails;
 	private int countryId, favorits, trailId;
 	float gmapX;
 	float gmapY;
@@ -174,16 +174,16 @@ public class Trail implements Serializable {
 		}
 	}
 
-	public static ArrayList<Trail> getTrails() {
+	public static ArrayList<Trail> getTrails(/**boolean force*/) {
+		if (trails== null || trails.size() == 0 /**|| force*/) {
 			trails = TrailData.getInstance().getAll();
-		TrailData.getInstance().close();
+			TrailData.getInstance().close();
+		}
 		ArrayList<Trail> myTrail = new ArrayList<Trail>();
 		for (Integer trail : new TreeSet<Integer>(trails.keySet())) {
 			myTrail.add(trails.get(trail));
-			Log.d("tag", "filtrino: " + trails.get(trail).getName()
-					+ " hinzugefügt, neue Size: " + myTrail.size());
-
 		}
+
 		return myTrail;
 
 	}

@@ -63,7 +63,7 @@ public class TrailData extends SQLiteOpenHelper {
 	public boolean isEmpty(){
 		    String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
 		    SQLiteStatement statement = getWritableDatabase().compileStatement(sql);
-		    return 0 != statement.simpleQueryForLong();
+		    return 0 == statement.simpleQueryForLong();
 		}
 	
 	public void delete(int trailId){
