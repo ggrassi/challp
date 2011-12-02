@@ -43,6 +43,11 @@ public class StartScreen extends LicenseCheckActivity {
 		controller = new Controller(handler);
 		controller.start();
 	}
+	
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
 	final Handler handler = new Handler() {
 		@Override
