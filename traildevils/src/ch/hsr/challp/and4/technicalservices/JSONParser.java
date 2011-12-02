@@ -40,9 +40,9 @@ public class JSONParser extends Thread {
 
 	@Override
 	public void run() {
-		sendMessage(1000);
+		sendMessage("Start Syncing...");
 		parse();
-		sendMessage(3000);
+		sendMessage("Launching Trail-Browser...");
 	}
 
 	private void parse() {
@@ -50,12 +50,12 @@ public class JSONParser extends Thread {
 			String readedFeed = readFeed();
 			JSONArray jsonArray = new JSONArray(readedFeed);
 			
-			sendMessage(2000);
+			sendMessage("Parsing...");
 			
 			for (int i = 0; i < jsonArray.length(); i++) {
 				if (i % (jsonArray.length() / 10) == 0) {
 					if((i / (jsonArray.length() / 10) * 10) <= 100) {
-						sendMessage(2000, (i / (jsonArray.length() / 10) * 10));
+						sendMessage("Parsing... ( " + (i / (jsonArray.length() / 10) * 10) + " % )");
 					}
 				}
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -70,7 +70,7 @@ public class JSONParser extends Thread {
 	}
 
 	private String readFeed() {
-		sendMessage(1100);
+		sendMessage("Download...");
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);
@@ -101,15 +101,9 @@ public class JSONParser extends Thread {
 		return builder.toString();
 	}
 
-	private void sendMessage(int arg1) {
-		sendMessage(arg1, 0);
-	}
-
-	private void sendMessage(int arg1, int arg2) {
+	private void sendMessage(String text) {
 		Message msg = handler.obtainMessage();
-		msg.arg1 = arg1;
-		msg.arg2 = arg2;
+		msg.obj = text;
 		handler.sendMessage(msg);
 	}
-
 }

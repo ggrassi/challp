@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 import ch.hsr.challp.and.R;
+import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 import ch.hsr.challp.and4.technicalservices.database.TrailData;
@@ -16,8 +16,8 @@ import ch.hsr.challp.and4.technicalservices.database.TrailData;
 public class StartScreen extends LicenseCheckActivity {
 	private static Object locationService = null;
 
-	private boolean shouldStartTabContainer = true;
 	private Controller controller;
+
 	private TextView textViewToChange;
 
 	public static Object getLocationService() {
@@ -29,57 +29,43 @@ public class StartScreen extends LicenseCheckActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.start_screen);
-
-
-        Toast.makeText(this, "Checking Application License", Toast.LENGTH_SHORT).show();
-        // Check the license
-        checkLicense();
 		
+		textViewToChange = (TextView) findViewById(R.id.wait_text);
 		
 		setWaitText("Getting Position...");
 		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
 		locationService = tmpLocationService;
 		UserLocationListener.getInstance();
 
+		setWaitText("Checking Application License...");
+		checkLicense();
+	}
+
+	@Override
+	protected void goOn() {
 		controller = new Controller(handler);
 		controller.start();
+	};
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	private void setWaitText(String WaitText) {
 		
 	}
-	
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
 	final Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			String message;
-			switch (msg.arg1) {
-			case 1000:
-				message = "Start Syncing...";
-				break;
-			case 1100:
-				message = "Download...";
-				break;
-			case 2000:
-				message = "Parsing... ( " + msg.arg2 + " % )";
-				break;
-			case 3000:
-				message = "Launching Trail-Browser...";
-				break;
-			default:
-				message = "Error! (no such message)";
-				break;
+			try {
+				textViewToChange.setText((String) msg.obj);
+			} catch (Exception e) {
+				// Do nothing
 			}
-			setWaitText(message);
 		}
 	};
-
-	private void setWaitText(String WaitText) {
-		textViewToChange = (TextView) findViewById(R.id.wait_text);
-		textViewToChange.setText(WaitText);
-	}
 
 	class Controller extends Thread {
 		Handler myH;
@@ -92,25 +78,25 @@ public class StartScreen extends LicenseCheckActivity {
 		public void run() {
 			try {
 				TrailData.initializeTrailData(getBaseContext());
-				if (TrailData.getInstance().isEmpty()){
-					JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
-							myH);
+				if (TrailData.getInstance().isEmpty()) {
+					JSONParser parser = new JSONParser(
+							getString(R.string.JSONUrl), myH);
 					parser.setCtx(getBaseContext());
 					parser.start();
 					parser.join();
 				}
 				TrailData.getInstance().close();
-				if (shouldStartTabContainer) {
-					Intent ac = new Intent(".activities.TabContainer");
-					startActivity(ac);
-				}
+				
+				Trail.getTrails();
+				
+				Intent ac = new Intent(".activities.TabContainer");
+				startActivity(ac);
+				
 			} catch (Exception e) {
-				Log.d("tag", "filtrino: " + "error:"
-						+ "Exception in zZzZ-Thread on StartScreen");
 				Log.d("tag", "filtrino: " + "error:" + e.toString());
 			} finally {
 				finish();
 			}
 		};
-	};
+	}
 }

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
@@ -30,20 +29,10 @@ public abstract class LicenseCheckActivity extends Activity {
 
 	Handler mHandler;
 
-	SharedPreferences prefs;
-
 	// REPLACE WITH YOUR OWN SALT , THIS IS FROM EXAMPLE
 	private static final byte[] SALT = new byte[] { -46, 65, 30, -128, -103,
 			-57, 74, -64, 51, 88, -95, -45, 77, -117, -36, -113, -11, 32, -64,
 			89 };
-
-	private void displayResult(final String result) {
-		mHandler.post(new Runnable() {
-			public void run() {
-				setProgressBarIndeterminateVisibility(false);
-			}
-		});
-	}
 
 	protected void doCheck() {
 		didCheck = false;
@@ -69,6 +58,8 @@ public abstract class LicenseCheckActivity extends Activity {
 		// BASE64_PUBLIC_KEY);
 		doCheck();
 	}
+	
+	abstract protected void goOn();
 
 	protected class MyLicenseCheckerCallback implements LicenseCheckerCallback {
 		public void allow() {
@@ -78,11 +69,11 @@ public abstract class LicenseCheckActivity extends Activity {
 				return;
 			}
 			// Should allow user access.
-			displayResult(getString(R.string.allow));
 			licensed = true;
 			checkingLicense = false;
 			didCheck = true;
-
+			
+			goOn();
 		}
 
 		public void dontAllow() {
@@ -91,7 +82,6 @@ public abstract class LicenseCheckActivity extends Activity {
 				// Don't update UI if Activity is finishing.
 				return;
 			}
-			displayResult(getString(R.string.dont_allow));
 			licensed = false;
 			// Should not allow access. In most cases, the app should assume
 			// the user has access unless it encounters this. If it does,
@@ -112,12 +102,6 @@ public abstract class LicenseCheckActivity extends Activity {
 				return;
 			}
 			licensed = false;
-			// This is a polite way of saying the developer made a mistake
-			// while setting up or calling the license checker library.
-			// Please examine the error code and fix the error.
-			String result = String.format(
-					getString(R.string.application_error), errorCode);
-			displayResult(result);
 			checkingLicense = false;
 			didCheck = true;;
 			showDialog(0);

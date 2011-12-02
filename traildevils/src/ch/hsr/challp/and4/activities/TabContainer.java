@@ -35,7 +35,7 @@ public class TabContainer extends TabActivity {
 		
 
 		intent = new Intent().setClass(this.getApplicationContext(), Billing.class);
-		spec = tabHost.newTabSpec("inappbilling_tab").setIndicator(this.getString(R.string.buy_tab_title), getResources().getDrawable(R.drawable.ic_tab_map))
+		spec = tabHost.newTabSpec("inappbilling_tab").setIndicator(this.getString(R.string.buy_tab_title), getResources().getDrawable(R.drawable.ic_tab_billing))
 				.setContent(intent);
 		tabHost.addTab(spec);
 		
