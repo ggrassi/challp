@@ -93,6 +93,7 @@ public abstract class LicenseCheckActivity extends Activity {
 			didCheck = true;
 
 			showDialog(0);
+			goOn();
 		}
 
 		public void applicationError(ApplicationErrorCode errorCode) {

@@ -58,12 +58,12 @@ import ch.hsr.challp.and4.billing.Consts.ResponseCode;
  */
 public class Billing extends Activity implements OnClickListener,
         OnItemSelectedListener {
-    private static final String TAG = "Dungeons";
+    private static final String TAG = "BillingLog";
 
     /**
      * Used for storing the log text.
      */
-    private static final String LOG_TEXT_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlACy0E7liDT1UYG5FncfBzPNOQj3Qwo2IyFm8oY6Bi+4eonV3v6nfN3EOwaf5Quz2gfq6spN78UDGZU0QNYxSB1qtffk7XzTW0HMuyq+Dq347+tBtAOTf4oyUpa6PK4jlo2pSToj7abF2Z2w0YhPepLyErEySn1okZh2KswOPDyrK/WM3odi2Y+7SFLhV6d5FxgGaF6p3r1n60Fy4f0b6nOiFORJVrCjhtzDyr6UCXdnz9i17KWxshxBy3ALByW7m8L8zN0KhcqhoUGJkQh01x6ZeT37VqM2d19WzjHRurFxG2X2mCJOrvhgqoBy7COzKvrPqWMaqxz2OqCO5zGXnQIDAQAB";
+    private static final String LOG_TEXT_KEY = "Logtext";
 
     /**
      * The SharedPreferences key for recording whether we initialized the
@@ -72,7 +72,7 @@ public class Billing extends Activity implements OnClickListener,
      */
     private static final String DB_INITIALIZED = "db_initialized";
 
-    private DungeonsPurchaseObserver mDungeonsPurchaseObserver;
+    private MyPurchaseObserver mPurchaseObserver;
     private Handler mHandler;
 
     private BillingService mBillingService;
@@ -110,8 +110,8 @@ public class Billing extends Activity implements OnClickListener,
      * A {@link PurchaseObserver} is used to get callbacks when Android Market sends
      * messages to this application so that we can update the UI.
      */
-    private class DungeonsPurchaseObserver extends PurchaseObserver {
-        public DungeonsPurchaseObserver(Handler handler) {
+    private class MyPurchaseObserver extends PurchaseObserver {
+        public MyPurchaseObserver(Handler handler) {
             super(Billing.this, handler);
         }
 
@@ -231,7 +231,7 @@ public class Billing extends Activity implements OnClickListener,
         setContentView(R.layout.billing);
 
         mHandler = new Handler();
-        mDungeonsPurchaseObserver = new DungeonsPurchaseObserver(mHandler);
+        mPurchaseObserver = new MyPurchaseObserver(mHandler);
         mBillingService = new BillingService();
         mBillingService.setContext(this);
 
@@ -239,7 +239,7 @@ public class Billing extends Activity implements OnClickListener,
         setupWidgets();
 
         // Check if billing is supported.
-        ResponseHandler.register(mDungeonsPurchaseObserver);
+        ResponseHandler.register(mPurchaseObserver);
         if (!mBillingService.checkBillingSupported()) {
             showDialog(DIALOG_CANNOT_CONNECT_ID);
         }
@@ -251,7 +251,7 @@ public class Billing extends Activity implements OnClickListener,
     @Override
     protected void onStart() {
         super.onStart();
-        ResponseHandler.register(mDungeonsPurchaseObserver);
+        ResponseHandler.register(mPurchaseObserver);
         initializeOwnedItems();
     }
 
@@ -261,7 +261,7 @@ public class Billing extends Activity implements OnClickListener,
     @Override
     protected void onStop() {
         super.onStop();
-        ResponseHandler.unregister(mDungeonsPurchaseObserver);
+        ResponseHandler.unregister(mPurchaseObserver);
     }
 
     @Override

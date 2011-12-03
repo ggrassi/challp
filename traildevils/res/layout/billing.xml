@@ -23,7 +23,7 @@
     android:layout_height="fill_parent"
     android:paddingLeft="4dip"
     android:paddingRight="4dip"
-    android:background="@color/screen_background">
+    android:background="@drawable/start_screen_bg_alpha_10">
 
     <TextView
         android:id="@+id/billing_supported"
@@ -35,7 +35,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dip"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
         android:text="@string/items_for_sale" />
@@ -55,17 +55,17 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:prompt="@string/select_item" />
-        <Button
+       <Button
             android:id="@+id/payload_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/edit_payload" />
+            android:text="@string/edit_payload" /> 
     </LinearLayout>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dip"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
         android:text="@string/items_you_own" />
@@ -81,7 +81,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dip"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
         android:text="@string/recent_transactions" />

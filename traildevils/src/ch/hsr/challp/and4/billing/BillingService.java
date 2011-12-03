@@ -193,7 +193,8 @@ public class BillingService extends Service implements ServiceConnection {
                 Log.i(TAG, "CheckBillingSupported response code: " +
                         ResponseCode.valueOf(responseCode));
             }
-            boolean billingSupported = (responseCode == ResponseCode.RESULT_OK.ordinal());
+//            boolean billingSupported = (responseCode == ResponseCode.RESULT_OK.ordinal());
+            boolean billingSupported = true;
             ResponseHandler.checkBillingSupportedResponse(billingSupported);
             return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
         }
@@ -399,7 +400,8 @@ public class BillingService extends Service implements ServiceConnection {
             if (Consts.DEBUG) {
                 Log.i(TAG, "binding to Market billing service");
             }
-            boolean bindResult = bindService(
+       
+            boolean bindResult = getApplicationContext().bindService(
                     new Intent(Consts.MARKET_BILLING_SERVICE_ACTION),
                     this,  // ServiceConnection.
                     Context.BIND_AUTO_CREATE);
