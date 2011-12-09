@@ -73,18 +73,21 @@
 						android:layout_gravity="right"/>
 				</LinearLayout>
 			</FrameLayout>
-			<TextView android:textAppearance="?android:attr/textAppearanceMedium" 
-			android:id="@+id/detailTrailName" 
-			android:text="TextView" 
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_marginLeft="5dp"/>
+			<LinearLayout android:id="@+id/ContentTop" android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="match_parent">
+				<TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/detailTrailName"  android:gravity="center_vertical" 
+						  android:text="TextView" android:layout_height="30dp" android:layout_width="wrap_content" android:layout_marginLeft="5dp"/>
+				<ImageButton android:layout_marginLeft="15dp" android:layout_gravity="right" android:id="@+id/fav_button" android:background="@null" android:src="@drawable/fav_add_small" android:layout_width="wrap_content" android:layout_height="30dp"/>
+			</LinearLayout>
 			<LinearLayout android:id="@+id/ScrollContent" 
 			    android:layout_marginLeft="5dp" 
 			    android:orientation="horizontal"
 			    android:layout_height="wrap_content" 
 			    android:layout_width="match_parent">
 				<LinearLayout android:id="@+id/layoutContent" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+					<LinearLayout android:id="@+id/layoutPlace" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="20dp">
+					    <TextView android:textStyle="bold" android:width="110dp" android:text="@string/detail_place" android:id="@+id/detailTrailPlaceDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+						<TextView android:text="@string/detail_na" android:id="@+id/detailTrailPlace" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+					</LinearLayout>
 					<LinearLayout android:id="@+id/layoutCountry" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="20dp">
 					    <TextView android:textStyle="bold" android:width="110dp" android:text="@string/detail_country" android:id="@+id/detailTrailCountryDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 						<TextView android:text="@string/detail_na" android:id="@+id/detailTrailCountry" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
@@ -95,7 +98,15 @@
 					</LinearLayout>
 				</LinearLayout>
 			</LinearLayout>
-			<Button android:id="@+id/fav_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_button_fav" />
+			<LinearLayout android:id="@+id/Buttons" 
+			    android:orientation="horizontal"
+			    android:layout_height="wrap_content" 
+			    android:layout_width="match_parent"
+			    android:layout_marginTop="10dp"
+			    android:layout_marginBottom="10dp">
+				<Button android:id="@+id/navigate_button" android:layout_width="wrap_content" android:layout_height="47dp" android:text="@string/detail_button_navigate" />
+				<Button android:id="@+id/web_button" android:layout_width="wrap_content" android:layout_height="47dp" android:text="@string/detail_button_webNavigate" />
+			</LinearLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

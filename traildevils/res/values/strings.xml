@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="hello">Hello World, BrowserActivity!</string>
     <string name="app_name">traildevils.ch</string>
     <string name="JSONUrl">http://152.96.80.18:8080/api/trails</string>
@@ -13,8 +12,10 @@
     <string name="detail_description">Beschreibung: </string>
     <string name="detail_country">Land: </string>
     <string name="detail_infos">Infos: </string>
-    <string name="furz">furz</string>
-    <string name="detail_button_fav">Favorite</string>
+    <string name="detail_place">Ort: </string>
+    <string name="detail_button_webNavigate">Website</string>
+    <string name="detail_button_navigate">Zum Trail navigieren</string>
+    <string name="detail_button_fav">Favorit</string>
     <string name="adMob_ID">a14ebbc9a2dcdb5</string>
     <string name="welcome">Welcome to the Sample store!</string>
     <string name="billing_not_supported_title">Can\'t make purchases</string>

@@ -10,13 +10,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.hsr.challp.and.R;
@@ -35,6 +37,7 @@ public class TrailDetail extends Activity{
 	private Handler handler;
 	private WeatherSet ws = null;
 	private boolean weatherIsVisible = true;
+	private ImageButton favBtn;
 	private Drawable weather1Draw;
 	private Drawable weather2Draw;
 	private Drawable weather3Draw;
@@ -65,33 +68,53 @@ public class TrailDetail extends Activity{
 			ImageView img = (ImageView)findViewById(R.id.trailImage);
 			TextView name = (TextView)findViewById(R.id.detailTrailName);
 			TextView countryView = (TextView)findViewById(R.id.detailTrailCountry);
+			TextView placeView = (TextView)findViewById(R.id.detailTrailPlace);
 			TextView descriptionView = (TextView)findViewById(R.id.detailTrailDescription);
 			
 			Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
 			img.setImageDrawable(trailDraw);
 			
 			name.setText(activeTrail.getName());
+			placeView.setText(activeTrail.getNextCity());
 			countryView.setText(country);
 			descriptionView.setText(activeTrail.getDescription());
 			
-			Button btn = (Button)findViewById(R.id.fav_button);
+			favBtn = (ImageButton)findViewById(R.id.fav_button);
+			Button webBtn = (Button)findViewById(R.id.web_button);
+			Button navigateBtn = (Button)findViewById(R.id.navigate_button);
 			
-			if(favs.isFavorite(activeTrail)){
-				btn.setCompoundDrawables(null, null, getResources()
-						.getDrawable(R.drawable.ic_tab_favorites_saved), null);
-
-			} else {
-				btn.setCompoundDrawables(null, null, getResources()
-						.getDrawable(R.drawable.ic_tab_favorites_selected),null);
-			}
-
-			btn.setOnClickListener(new OnClickListener() {	
+			setFavoriteButtonIcon();
+			
+			favBtn.setOnClickListener(new OnClickListener() {	
 				public void onClick(View v) {
 					handleFavorite();
 				}
 			});	 
 			
+			webBtn.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					int trailIdWeb = activeTrail.getTrailId();
+					trailIdWeb++;
+					goToUrl("http://www.traildevils.ch/trail.php?tid="+trailIdWeb);
+				}
+			});
+			
+			navigateBtn.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					navigateToTrail();
+				}
+			});
+			
 			startWeaterInitialization();
+		}
+	}
+	
+	private void setFavoriteButtonIcon(){
+		if(favs.isFavorite(activeTrail)){
+			favBtn.setImageResource(R.drawable.fav_remove_small);
+
+		} else {
+			favBtn.setImageResource(R.drawable.fav_add_small);
 		}
 	}
 	
@@ -101,6 +124,17 @@ public class TrailDetail extends Activity{
 		}else{
 			favs.addTrail(activeTrail);
 		}
+		
+		handler.post(new Runnable() {
+			public void run() {
+				setFavoriteButtonIcon();
+			}
+		});
+	}
+	
+	private void navigateToTrail(){
+		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=New+York+NY"));
+		startActivity(i);
 	}
 	
 	private void loadWeatherData(){
@@ -130,9 +164,9 @@ public class TrailDetail extends Activity{
 		TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
 		TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
 		
-		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
-		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
-		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
+		celcius_1.setText(" "+getDayOfWeek(0)+"\n "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
+		celcius_2.setText(" "+getDayOfWeek(1)+"\n "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
+		celcius_3.setText(" "+getDayOfWeek(2)+"\n "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
 	}
 
 	private Drawable loadImage(String url)
@@ -180,6 +214,13 @@ public class TrailDetail extends Activity{
 	private int getMinTemp(int day){
 		return getWeatherSet().getWeatherForecastConditions().get(day).getTempMinCelsius();
 	}
+	
+	private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
+
 	
 	private String getDayOfWeek(int day){
 		String shortDayName = getWeatherSet().getWeatherForecastConditions().get(day).getDayofWeek();
