@@ -47,7 +47,8 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	public abstract void update(Observable observable, Object data);
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView,
+			ViewGroup parent) {
 		v = convertView;
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) context
@@ -56,11 +57,7 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		}
 
 		trail = trails.get(position);
-		try {
-			setTrailIcon();
-		} catch (Exception e) {
-			Log.d("tag", "filtrino: " + e.toString() + "");
-		}
+
 		if (trail != null) {
 			listImg = (ImageView) v.findViewById(R.id.status_icon);
 
@@ -73,6 +70,11 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 				info.setText(getDistanceText(trail));
 				date.setText(Html.fromHtml(trail.getDescription()).toString());
 			}
+		}
+		try {
+			setTrailIcon();
+		} catch (Exception e) {
+			Log.d("tag", "filtrino: " + e.toString() + "");
 		}
 		return v;
 	}
@@ -104,19 +106,13 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	}
 
 	public void setTrailIcon() {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					loadImage();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				View iconContainer = v.findViewById(R.id.status_icon);
-				iconContainer.setVisibility(View.VISIBLE);
-			}
-		}).start();
-
+		try {
+			loadImage();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		View iconContainer = v.findViewById(R.id.status_icon);
+		iconContainer.setVisibility(View.VISIBLE);
 	}
 
 	private void loadImage() throws Exception {
@@ -127,7 +123,8 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 			trailDraw = new BitmapDrawable(BitmapFactory.decodeFile(imageFile
 					.getAbsolutePath()));
 		} else {
-			if (trail.getImageUrl120() != null && !"null".equals(trail.getImageUrl120())) {
+			if (trail.getImageUrl120() != null
+					&& !"null".equals(trail.getImageUrl120())) {
 				InputStream is = (InputStream) new URL(trail.getImageUrl120())
 						.getContent();
 				trailDraw = Drawable.createFromStream(is, "src name");
