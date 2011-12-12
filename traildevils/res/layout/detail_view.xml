@@ -94,7 +94,7 @@
 					</LinearLayout>
 					<LinearLayout android:id="@+id/layoutInfo" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
 						<TextView android:textStyle="bold" android:text="@string/detail_description" android:id="@+id/detailTrailDescriptionDes" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-					<TextView android:text="@string/detail_na" android:id="@+id/detailTrailDescription" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+						<TextView android:text="@string/detail_na" android:autoLink="web" android:linksClickable="true" android:id="@+id/detailTrailDescription" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 					</LinearLayout>
 				</LinearLayout>
 			</LinearLayout>
