@@ -5,7 +5,7 @@
 	android:padding="2dip">
 
 	<ImageView android:id="@+id/status_icon"
-		android:layout_width="wrap_content" android:layout_marginRight="6dip" android:src="@drawable/icon" android:layout_height="match_parent">
+		android:layout_width="50dip" android:layout_marginRight="10dip" android:src="@drawable/icon" android:layout_height="match_parent" android:scaleType="centerCrop">
 	</ImageView>
 
 	<LinearLayout android:orientation="vertical"

@@ -10,13 +10,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.hsr.challp.android4.R;
@@ -28,79 +31,126 @@ import ch.hsr.challp.and4.technicalservices.weather.WeatherSet;
 
 public class TrailDetail extends Activity{
 	
+	private static final String GOOGLE_NAVIGATION_INTENT = "google.navigation:q=";
+	private static final String TRAIL_DEVILS_WEBSITE = "http://www.traildevils.ch/trail.php?tid=";
+	private static final String TRAIL_NOT_AVAILABLE = "n.a.";
+	private static final String TRAIL_INFO_REGEX = "\\<[^>]*>";
+	
 	private String city;
 	private String country;
 	private Trail activeTrail;
-	private Favorites favs;
-	private Handler handler;
+	private Favorites favorites;
+	private Handler handler = new Handler();
 	private WeatherSet ws = null;
-	private boolean weatherIsVisible = true;
+	private boolean weatherIsAvailable = true;
+	private ImageButton favoriteButton;
 	private Drawable weather1Draw;
 	private Drawable weather2Draw;
 	private Drawable weather3Draw;
 	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		handler = new Handler();
-		favs = ((TrailDevils) getApplication()).getFavorites();
-		
 		setContentView(R.layout.detail_view);
+		favorites = ((TrailDevils) getApplication()).getFavorites();
 		
-		Bundle extras = getIntent().getExtras();
-		if(extras !=null){
-			Integer trailId = extras.getInt("key");
-			activeTrail = null;
-			
-			for(Trail t: Trail.getTrails()){
-				if(t.getTrailId()==trailId){
-					activeTrail = t;
-				}
+		initActiveTrailInformation();
+		initViews();
+		initButtons();
+
+		startWeaterInitialization();
+	}
+
+	private void initViews() {
+		ImageView mainTrailImage = (ImageView) findViewById(R.id.trailImage);
+		setTrailImage(mainTrailImage);
+		
+		TextView name = (TextView) findViewById(R.id.detailTrailName);
+		name.setText(activeTrail.getName());
+		
+		TextView countryView = (TextView) findViewById(R.id.detailTrailCountry);
+		countryView.setText(country);
+		
+		TextView placeView = (TextView) findViewById(R.id.detailTrailPlace);
+		placeView.setText(city.equals("null") ? TRAIL_NOT_AVAILABLE : city);
+		
+		TextView descriptionView = (TextView) findViewById(R.id.detailTrailDescription);
+		descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+		descriptionView.setText(activeTrail.getDescription().replaceAll(TRAIL_INFO_REGEX, ""));
+	}
+	
+	private void initButtons(){
+		favoriteButton = (ImageButton) findViewById(R.id.fav_button);
+		setFavoriteButtonIcon();
+		favoriteButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				handleFavorite();
 			}
-			
-			this.country = activeTrail.getCountry();
-			this.city = activeTrail.getNextCity();
-			
-			ImageView img = (ImageView)findViewById(R.id.trailImage);
-			TextView name = (TextView)findViewById(R.id.detailTrailName);
-			TextView countryView = (TextView)findViewById(R.id.detailTrailCountry);
-			TextView descriptionView = (TextView)findViewById(R.id.detailTrailDescription);
-			
+		});
+		
+		Button websiteButton = (Button) findViewById(R.id.web_button);
+		websiteButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				int trailIdWeb = activeTrail.getTrailDevilsId();
+				goToUrl(TRAIL_DEVILS_WEBSITE + trailIdWeb);
+			}
+		});
+		
+		Button navigationButton = (Button) findViewById(R.id.navigate_button);
+		navigationButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				navigateToTrail();
+			}
+		});
+	}
+
+	private void setTrailImage(ImageView mainTrailImage) {
+		if (activeTrail.getImageUrl800().equals("null")) {
+			mainTrailImage.setImageResource(R.drawable.trail_dummy);
+		} else {
 			Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
-			img.setImageDrawable(trailDraw);
-			
-			name.setText(activeTrail.getName());
-			countryView.setText(country);
-			descriptionView.setText(activeTrail.getDescription());
-			
-			Button btn = (Button)findViewById(R.id.fav_button);
-			
-			if(favs.isFavorite(activeTrail)){
-				btn.setCompoundDrawables(null, null, getResources()
-						.getDrawable(R.drawable.ic_tab_favorites_saved), null);
-
-			} else {
-				btn.setCompoundDrawables(null, null, getResources()
-						.getDrawable(R.drawable.ic_tab_favorites_selected),null);
-			}
-
-			btn.setOnClickListener(new OnClickListener() {	
-				public void onClick(View v) {
-					handleFavorite();
-				}
-			});	 
-			
-			startWeaterInitialization();
+			mainTrailImage.setImageDrawable(trailDraw);
 		}
+	}
+
+	private void initActiveTrailInformation() {
+		Bundle intentInformation = getIntent().getExtras();
+		if (intentInformation != null) {
+			Integer trailId = intentInformation.getInt("key");
+			activeTrail = null;
+			for (Trail trail : Trail.getTrails()) {
+				if (trail.getTrailId() == trailId) {
+					activeTrail = trail;
+				}
+			}
+		}
+		country = activeTrail.getCountry();
+		city = activeTrail.getNextCity();
+	}
+	
+	private void setFavoriteButtonIcon(){
+		favoriteButton.setImageResource(favorites.isFavorite(activeTrail)
+				? R.drawable.fav_remove_small : R.drawable.fav_add_small);
 	}
 	
 	private void handleFavorite(){
-		if(favs.isFavorite(activeTrail)){
-			favs.removeTrail(activeTrail);
+		if(favorites.isFavorite(activeTrail)){
+			favorites.removeTrail(activeTrail);
 		}else{
-			favs.addTrail(activeTrail);
+			favorites.addTrail(activeTrail);
 		}
+		
+		handler.post(new Runnable() {
+			public void run() {
+				setFavoriteButtonIcon();
+			}
+		});
+	}
+	
+	private void navigateToTrail(){
+		String cords = String.valueOf(activeTrail.getGmapX()) +","+String.valueOf(activeTrail.getGmapY());
+		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_NAVIGATION_INTENT+cords));
+		startActivity(i);
 	}
 	
 	private void loadWeatherData(){
@@ -113,11 +163,11 @@ public class TrailDetail extends Activity{
 			weather2Draw = loadImage(imgURLAfterTomorrow.toString());
 			weather3Draw = loadImage(imgURLAfterAfterTomorrow.toString());
 		}else{
-			weatherIsVisible = false;
+			weatherIsAvailable = false;
 		}
 	}
 	
-	private void setWeatherData() throws Exception{
+	private void setWeatherData(){
 		ImageView weather_1 = (ImageView)findViewById(R.id.weather1);
 		ImageView weather_2 = (ImageView)findViewById(R.id.weather2);
 		ImageView weather_3 = (ImageView)findViewById(R.id.weather3);
@@ -133,13 +183,14 @@ public class TrailDetail extends Activity{
 		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"�/"+getMaxTemp(0)+"�");
 		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"�/"+getMaxTemp(1)+"�");
 		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"�/"+getMaxTemp(2)+"�");
+
 	}
 
 	private Drawable loadImage(String url)
     {
          try {
-             InputStream is = (InputStream) new URL(url).getContent();
-             Drawable d = Drawable.createFromStream(is, "src name");
+             InputStream stream = (InputStream) new URL(url).getContent();
+             Drawable d = Drawable.createFromStream(stream, "src name");
              return d;
          }catch (Exception e) {
              return null;
@@ -157,7 +208,10 @@ public class TrailDetail extends Activity{
 	
 	private WeatherSet getWeatherSet(){
 		try{
-			String queryString = "http://www.google.com/ig/api?weather=" + city + "," + country;
+			String urlCity = city.replaceAll("�", "ue");
+			urlCity.replaceAll("�", "ae");
+			urlCity.replaceAll("�","oe");
+			String queryString = "http://www.google.com/ig/api?weather=" + urlCity + "," + country;
 			URL url = new URL(queryString.replace(" ", "%20"));
 			
 			SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -180,6 +234,13 @@ public class TrailDetail extends Activity{
 	private int getMinTemp(int day){
 		return getWeatherSet().getWeatherForecastConditions().get(day).getTempMinCelsius();
 	}
+	
+	private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
+
 	
 	private String getDayOfWeek(int day){
 		String shortDayName = getWeatherSet().getWeatherForecastConditions().get(day).getDayofWeek();
@@ -213,13 +274,8 @@ public class TrailDetail extends Activity{
 				loadWeatherData();
 				handler.post(new Runnable() {
 					public void run() {
-						try {
+						if(weatherIsAvailable){
 							setWeatherData();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						if(weatherIsVisible){
 							View weatherContainer = findViewById(R.id.weatherContainer);
 							weatherContainer.setVisibility(View.VISIBLE);
 						}

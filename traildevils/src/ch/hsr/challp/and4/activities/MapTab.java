@@ -27,8 +27,6 @@ public class MapTab extends MapActivity {
 	private GeoPoint point;
 	private OverlayItem overlayItem;
 
-	// private AdView adView;
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,33 +36,23 @@ public class MapTab extends MapActivity {
 		initMapView();
 		initMyLocationOverlay();
 		initTrailOverlay();
-
-
 	}
-
 
 	private void initTrailOverlay() {
 		mapOverlay = mapView.getOverlays();
-		drawable = this.getResources().getDrawable(R.drawable.icon);
-		trailizedOverlay = new TrailizedOverlay(drawable);
-
-		// GeoPoint point = new GeoPoint(19240000, -99120000);
-		// OverlayItem overlayItem = new OverlayItem(point, "", "");
-		// trailizedOverlay.addOverlayItem(overlayItem);
-		// mapOverlay.add(trailizedOverlay);
-		
+		drawable = this.getResources().getDrawable(R.drawable.map_marker);
+		trailizedOverlay = new TrailizedOverlay(drawable, getApplicationContext());
 
 		for (Trail trail : Trail.getTrails()) {
 			point = new GeoPoint((int) (trail.getGmapX() * 1E6),
 					(int) (trail.getGmapY() * 1E6));
 			overlayItem = new OverlayItem(point, trail.getName(),
-					trail.getDescription());
+					String.valueOf(trail.getTrailId()));
 			trailizedOverlay.addOverlayItem(overlayItem);
-
 		}
+
 		mapOverlay.add(trailizedOverlay);
 		trailizedOverlay.doPopulate();
-
 	}
 
 	private void initMyLocationOverlay() {
@@ -89,7 +77,6 @@ public class MapTab extends MapActivity {
 
 			public void run() {
 				mapCtrl.animateTo(myLocationOverlay.getMyLocation());
-
 			}
 		});
 	}
@@ -103,7 +90,6 @@ public class MapTab extends MapActivity {
 		mapView.setBuiltInZoomControls(true);
 
 		mapView.setSatellite(true);
-		// mapView.setStreetView(true);
 	}
 
 	@Override
@@ -123,8 +109,6 @@ public class MapTab extends MapActivity {
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 }

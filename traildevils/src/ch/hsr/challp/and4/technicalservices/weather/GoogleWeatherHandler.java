@@ -4,11 +4,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import ch.hsr.challp.and4.domain.weather.WeatherUtils;
+import ch.hsr.challp.and4.technicalservices.weather.WeatherUtils;
 
 public class GoogleWeatherHandler extends DefaultHandler {
 
 	private WeatherSet myWeatherSet = null;
+	@SuppressWarnings("unused")
 	private boolean in_forecast_information = false;
 	private boolean in_current_conditions = false;
 	private boolean in_forecast_conditions = false;
