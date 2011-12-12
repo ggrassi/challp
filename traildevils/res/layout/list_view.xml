@@ -13,7 +13,7 @@
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:cacheColorHint="#00000000" />
 		<TextView android:id="@+id/android:empty"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="10dp" android:gravity="center_horizontal"
 			android:text="@string/no_trails" />
 	</LinearLayout>
 	<RelativeLayout android:layout_width="fill_parent"
