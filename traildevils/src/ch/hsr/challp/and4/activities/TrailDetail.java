@@ -101,8 +101,7 @@ public class TrailDetail extends Activity{
 			
 			webBtn.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					int trailIdWeb = activeTrail.getTrailId();
-					trailIdWeb++;
+					int trailIdWeb = activeTrail.getTrailDevilsId();
 					goToUrl("http://www.traildevils.ch/trail.php?tid="+trailIdWeb);
 				}
 			});

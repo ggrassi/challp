@@ -26,7 +26,7 @@ public class Trail implements Serializable {
 			SERIALIZE_FILE_NAME);
 	// private static HashMap<Integer, Trail> trails;
 	private static ArrayList<Trail> trailsArrayList = new ArrayList<Trail>();
-	private int trailId;
+	private int trailId, trailDevilsId;
 	float gmapX;
 	float gmapY;
 	private String country, description, imageUrl120, imageUrl800, name,
@@ -126,6 +126,7 @@ public class Trail implements Serializable {
 		imageUrl800 = trailJson.getString("ImageUrl800");
 		name = trailJson.getString("Name");
 		nextCity = trailJson.getString("NextCity");
+		setTrailDevilsId(trailJson.getInt("TraildevilsId"));
 	}
 
 	public float getGmapX() {
@@ -162,6 +163,14 @@ public class Trail implements Serializable {
 
 	public String getNextCity() {
 		return nextCity;
+	}
+
+	public int getTrailDevilsId() {
+		return trailDevilsId;
+	}
+
+	public void setTrailDevilsId(int trailDevilsId) {
+		this.trailDevilsId = trailDevilsId;
 	}
 
 }
