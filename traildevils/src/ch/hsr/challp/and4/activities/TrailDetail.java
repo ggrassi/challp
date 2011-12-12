@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -70,6 +71,8 @@ public class TrailDetail extends Activity{
 			TextView countryView = (TextView)findViewById(R.id.detailTrailCountry);
 			TextView placeView = (TextView)findViewById(R.id.detailTrailPlace);
 			TextView descriptionView = (TextView)findViewById(R.id.detailTrailDescription);
+			descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+
 			
 			if(activeTrail.getImageUrl800()==null || activeTrail.getImageUrl800().equals("null")){
 				mainTrailImage.setImageResource(R.drawable.trail_dummy);
@@ -85,7 +88,10 @@ public class TrailDetail extends Activity{
 			placeView.setText(place);
 			
 			countryView.setText(country);
-			descriptionView.setText(activeTrail.getDescription());
+			
+			
+			String description = activeTrail.getDescription().replaceAll("\\<[^>]*>","");
+			descriptionView.setText(description);
 			
 			favBtn = (ImageButton)findViewById(R.id.fav_button);
 			Button webBtn = (Button)findViewById(R.id.web_button);
