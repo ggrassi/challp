@@ -11,7 +11,6 @@ import ch.hsr.challp.and.R;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
-import ch.hsr.challp.and4.technicalservices.database.TrailData;
 
 public class StartScreen extends LicenseCheckActivity {
 	private static Object locationService = null;
@@ -77,17 +76,16 @@ public class StartScreen extends LicenseCheckActivity {
 		@Override
 		public void run() {
 			try {
-				TrailData.initializeTrailData(getBaseContext());
-				if (TrailData.getInstance().isEmpty()) {
+				if (!Trail.serializationExists()) {
 					JSONParser parser = new JSONParser(
 							getString(R.string.JSONUrl), myH);
 					parser.setCtx(getBaseContext());
 					parser.start();
 					parser.join();
+				} else {
+					Trail.deserialize();
 				}
-				TrailData.getInstance().close();
 				
-				Trail.getTrails();
 				
 				Intent ac = new Intent(".activities.TabContainer");
 				startActivity(ac);

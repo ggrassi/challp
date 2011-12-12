@@ -61,8 +61,9 @@ public class JSONParser extends Thread {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 				
 				@SuppressWarnings("unused")
-				Trail tmpTrail = new Trail(jsonObject, false);
+				Trail tmpTrail = new Trail(jsonObject);
 			}
+			Trail.serialize();
 		} catch (Exception e) {
 			//TODO: Handle Excpetion
 			e.printStackTrace();

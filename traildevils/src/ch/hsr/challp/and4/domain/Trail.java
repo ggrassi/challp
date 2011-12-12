@@ -1,92 +1,131 @@
 package ch.hsr.challp.and4.domain;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.TreeSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.Html;
 import android.util.Log;
-import ch.hsr.challp.and4.technicalservices.database.TrailData;
 
 public class Trail implements Serializable {
-
-	public Trail() {
-
-	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	public Trail(int countryId, int favorits, int trailId, float gmapX,
-			float gmapY, Date creationDate, Date lastModified, String country,
-			String description, String imageUrl120, String imageUrl800,
-			String info, String journey, String name, String nextCity,
-			String state, String url, boolean isCommercial, boolean isOpen,
-			TrailData trailData) {
-		super();
-		this.countryId = countryId;
-		this.favorits = favorits;
-		this.trailId = trailId;
-		this.gmapX = gmapX;
-		this.gmapY = gmapY;
-		this.creationDate = creationDate;
-		this.lastModified = lastModified;
-		this.country = country;
-		this.description = description;
-		this.imageUrl120 = imageUrl120;
-		this.imageUrl800 = imageUrl800;
-		this.info = info;
-		this.journey = journey;
-		this.name = name;
-		this.nextCity = nextCity;
-		this.state = state;
-		this.url = url;
-		this.isCommercial = isCommercial;
-		this.isOpen = isOpen;
-	}
-
-	public Trail(int trailId, Date creationDate, String name) {
-		super();
-		this.creationDate = creationDate;
-		this.trailId = trailId;
-		this.name = name;
-	}
-
-	private static HashMap<Integer, Trail> trails;
-	private int countryId, favorits, trailId;
+	private static final String SERIALIZE_PATH = "/data/data/ch.hsr.challp.and/files/trails";
+	private static final String SERIALIZE_FILE_NAME = "trails.ser";
+	private static final File SERIALIZE_FILE = new File(SERIALIZE_PATH,
+			SERIALIZE_FILE_NAME);
+	// private static HashMap<Integer, Trail> trails;
+	private static ArrayList<Trail> trailsArrayList = new ArrayList<Trail>();
+	private int trailId;
 	float gmapX;
 	float gmapY;
-	private Date creationDate, lastModified;
-	private String country, description, imageUrl120, imageUrl800, info,
-			journey, name, nextCity, state, url;
-	private boolean isCommercial, isOpen;
+	private String country, description, imageUrl120, imageUrl800, name,
+			nextCity;
 
-	@Override
-	public String toString() {
-		return "Trail [countryId=" + countryId + ", favorits=" + favorits
-				+ ", gmapX=" + gmapX + ", gmapY=" + gmapY + ", trailId="
-				+ trailId + ", creationDate=" + creationDate + ", country="
-				+ country + ", description=" + description + ", imageUrl120="
-				+ imageUrl120 + ", imageUrl800=" + imageUrl800 + ", info="
-				+ info + ", journey=" + journey + ", name=" + name
-				+ ", nextCity=" + nextCity + ", state=" + state + ", url="
-				+ url + ", isCommercial=" + isCommercial + ", isOpen=" + isOpen
-				+ "]";
+	public Trail(JSONObject trailJson) {
+		try {
+			converte(trailJson);
+			trailsArrayList.add(this);
+		} catch (JSONException e) {
+			Log.d("tag", "filtrino: " + e.toString() + "");
+		}
 	}
 
-	public int getCountryId() {
-		return countryId;
+	public static ArrayList<Trail> getTrails() {
+		if (trailsArrayList == null || trailsArrayList.size() == 0) {
+			deserialize();
+		}
+		return trailsArrayList;
 	}
 
-	public int getFavorits() {
-		return favorits;
+	public static void deserialize() {
+		if (serializationExists()) {
+			Log.d("tag",
+					"filtrino: " + "start deserialize: "
+							+ System.currentTimeMillis());
+
+			FileInputStream fis = null;
+			ObjectInputStream in = null;
+			try {
+				fis = new FileInputStream(SERIALIZE_FILE);
+				in = new ObjectInputStream(fis);
+				trailsArrayList = (ArrayList<Trail>) in.readObject();
+				in.close();
+				Log.d("tag",
+						"filtrino: " + "end deserialize: "
+								+ System.currentTimeMillis());
+
+			} catch (IOException ex) {
+				Log.d("tag", "filtrino: " + ex.toString() + "");
+			} catch (ClassNotFoundException e) {
+				Log.d("tag", "filtrino: " + e.toString() + "");
+			}
+		}
+	}
+
+	public static void serialize() {
+		try {
+			if (serializationExists()
+					|| (new File(SERIALIZE_PATH).mkdirs() && SERIALIZE_FILE
+							.createNewFile()))
+				;
+
+		} catch (IOException e) {
+			Log.d("tag", "filtrino: " + "error: " + e.toString());
+
+		}
+		Log.d("tag",
+				"filtrino: " + "start serialize: " + System.currentTimeMillis());
+
+		FileOutputStream fos = null;
+		ObjectOutputStream out = null;
+		try {
+			fos = new FileOutputStream(SERIALIZE_FILE);
+			out = new ObjectOutputStream(fos);
+			out.writeObject(trailsArrayList);
+			out.close();
+			Log.d("tag",
+					"filtrino: " + "end serialize: "
+							+ System.currentTimeMillis());
+
+		} catch (IOException ex) {
+			Log.d("tag", "filtrino: " + "error: " + ex.toString());
+
+		}
+	}
+
+	public static boolean serializationExists() {
+		return SERIALIZE_FILE.exists();
+	}
+
+	// private static ArrayList<Trail> converteMapToArrayList() {
+	// ArrayList<Trail> myTrail = new ArrayList<Trail>();
+	// for (Integer trail : new TreeSet<Integer>(trails.keySet())) {
+	// myTrail.add(trails.get(trail));
+	// }
+	// return myTrail;
+	// }
+
+	private void converte(JSONObject trailJson) throws JSONException {
+		trailId = trailJson.getInt("Id");
+		country = trailJson.getString("Country");
+		description = trailJson.getString("Desc");
+		gmapX = (float) (trailJson.getDouble("GmapX"));
+		gmapY = (float) (trailJson.getDouble("GmapY"));
+		imageUrl120 = trailJson.getString("ImageUrl120");
+		imageUrl800 = trailJson.getString("ImageUrl800");
+		name = trailJson.getString("Name");
+		nextCity = trailJson.getString("NextCity");
 	}
 
 	public float getGmapX() {
@@ -99,18 +138,6 @@ public class Trail implements Serializable {
 
 	public int getTrailId() {
 		return trailId;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public Date getLastModified() {
-		return lastModified;
-	}
-
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
 	}
 
 	public String getCountry() {
@@ -129,14 +156,6 @@ public class Trail implements Serializable {
 		return imageUrl800;
 	}
 
-	public String getInfo() {
-		return Html.fromHtml(info).toString();
-	}
-
-	public String getJourney() {
-		return journey;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -145,77 +164,4 @@ public class Trail implements Serializable {
 		return nextCity;
 	}
 
-	public String getState() {
-		return state;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public boolean isCommercial() {
-		return isCommercial;
-	}
-
-	public boolean isOpen() {
-		return isOpen;
-	}
-
-	public Trail(JSONObject trailJson, boolean fromDB) {
-		try {
-			converte(trailJson);
-
-			if (!fromDB) {
-				TrailData.getInstance().add(this);
-				TrailData.getInstance().close();
-			}
-		} catch (JSONException e) {
-			Log.d("tag", "filtrino: " + e.toString() + "");
-		}
-	}
-
-	public static ArrayList<Trail> getTrails(/**boolean force*/) {
-		if (trails== null || trails.size() == 0 /**|| force*/) {
-			trails = TrailData.getInstance().getAll();
-			TrailData.getInstance().close();
-		}
-		ArrayList<Trail> myTrail = new ArrayList<Trail>();
-		for (Integer trail : new TreeSet<Integer>(trails.keySet())) {
-			myTrail.add(trails.get(trail));
-		}
-
-		return myTrail;
-
-	}
-
-	private void converte(JSONObject trailJson) throws JSONException {
-		trailId = trailJson.getInt("Id");
-		country = trailJson.getString("Country");
-		countryId = trailJson.getInt("CountryId");
-		creationDate = createDateFromJson(trailJson.getString("CreatedDate"));
-		setLastModified(createDateFromJson(trailJson.getString("ModifiedDate")));
-		description = trailJson.getString("Desc");
-		favorits = trailJson.getInt("Favorits");
-		gmapX = (float) (trailJson.getDouble("GmapX"));
-		gmapY = (float) (trailJson.getDouble("GmapY"));
-		imageUrl120 = trailJson.getString("ImageUrl120");
-		imageUrl800 = trailJson.getString("ImageUrl800");
-		info = trailJson.getString("Info");
-		isCommercial = trailJson.getBoolean("IsCommercial");
-		try {
-			isOpen = trailJson.getBoolean("IsOpen");
-		} catch (Exception e) {
-			isOpen = false;
-		}
-		journey = trailJson.getString("Journey");
-		name = trailJson.getString("Name");
-		nextCity = trailJson.getString("NextCity");
-		state = trailJson.getString("State");
-		url = trailJson.getString("Url");
-	}
-
-	private Date createDateFromJson(String string) {
-		String timestamp = string.substring(6, string.length() - 7);
-		return new Date(Long.valueOf(timestamp));
-	}
 }
