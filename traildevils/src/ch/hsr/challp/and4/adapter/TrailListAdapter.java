@@ -127,7 +127,7 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 			trailDraw = new BitmapDrawable(BitmapFactory.decodeFile(imageFile
 					.getAbsolutePath()));
 		} else {
-			if (trail.getImageUrl120() != null) {
+			if (trail.getImageUrl120() != null && !"null".equals(trail.getImageUrl120())) {
 				InputStream is = (InputStream) new URL(trail.getImageUrl120())
 						.getContent();
 				trailDraw = Drawable.createFromStream(is, "src name");
