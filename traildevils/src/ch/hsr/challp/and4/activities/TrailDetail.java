@@ -133,7 +133,8 @@ public class TrailDetail extends Activity{
 	}
 	
 	private void navigateToTrail(){
-		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=New+York+NY"));
+		String cords = String.valueOf(activeTrail.getGmapX()) +","+String.valueOf(activeTrail.getGmapY());
+		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+cords));
 		startActivity(i);
 	}
 	
