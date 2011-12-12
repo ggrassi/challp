@@ -5,7 +5,7 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import ch.hsr.challp.and.R;
+import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.TrailizedOverlay;
 

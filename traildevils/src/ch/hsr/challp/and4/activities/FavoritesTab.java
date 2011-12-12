@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import ch.hsr.challp.and.R;
+import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.adapter.FavoritesListAdapter;
 import ch.hsr.challp.and4.application.TrailDevils;
 

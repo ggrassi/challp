@@ -19,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.hsr.challp.and.R;
+import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
@@ -130,9 +130,9 @@ public class TrailDetail extends Activity{
 		TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
 		TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
 		
-		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
-		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
-		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
+		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"ï¿½/"+getMaxTemp(0)+"ï¿½");
+		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"ï¿½/"+getMaxTemp(1)+"ï¿½");
+		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"ï¿½/"+getMaxTemp(2)+"ï¿½");
 	}
 
 	private Drawable loadImage(String url)

@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
-import ch.hsr.challp.and.R;
+import ch.hsr.challp.android4.R;
 
 import com.android.vending.licensing.AESObfuscator;
 import com.android.vending.licensing.LicenseChecker;

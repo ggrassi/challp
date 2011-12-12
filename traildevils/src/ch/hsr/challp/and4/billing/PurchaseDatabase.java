@@ -71,6 +71,11 @@ public class PurchaseDatabase {
 
     public void close() {
         mDatabaseHelper.close();
+//        if(!mDatabaseHelper.db.equals(null)){
+//        	mDatabaseHelper.db.execSQL("DROP TABLE IF EXISTS " + PURCHASE_HISTORY_TABLE_NAME);
+//        	mDatabaseHelper.db.execSQL("DROP TABLE IF EXISTS " + PURCHASED_ITEMS_TABLE_NAME);
+//        }
+        
     }
 
     /**
@@ -155,6 +160,10 @@ public class PurchaseDatabase {
         }
         return quantity;
     }
+    
+    public void delete(String table){
+    	
+    }
 
     /**
      * Returns a cursor that can be used to read all the rows and columns of
@@ -169,13 +178,20 @@ public class PurchaseDatabase {
      * This is a standard helper class for constructing the database.
      */
     private class DatabaseHelper extends SQLiteOpenHelper {
+    	private SQLiteDatabase db = null;
+    	
         public DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+        	this.db=db;
             createPurchaseTable(db);
+        }
+        
+        public SQLiteDatabase getDBContext(){
+        	return this.db;
         }
 
         @Override
@@ -183,6 +199,7 @@ public class PurchaseDatabase {
             // Production-quality upgrade code should modify the tables when
             // the database version changes instead of dropping the tables and
             // re-creating them.
+        	
             if (newVersion != DATABASE_VERSION) {
                 Log.w(TAG, "Database upgrade from old: " + oldVersion + " to: " +
                     newVersion);

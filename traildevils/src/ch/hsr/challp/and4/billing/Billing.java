@@ -47,7 +47,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.hsr.challp.and.R;
+import ch.hsr.challp.android4.R;
+import ch.hsr.challp.and4.activities.TabContainer;
 import ch.hsr.challp.and4.billing.BillingService.RequestPurchase;
 import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
 import ch.hsr.challp.and4.billing.Consts.PurchaseState;
@@ -159,12 +160,15 @@ public class Billing extends Activity implements OnClickListener,
                 if (Consts.DEBUG) {
                     Log.i(TAG, "purchase was successfully sent to server");
                 }
+                TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);
                 logProductActivity(request.mProductId, "sending purchase request");
             } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
                 if (Consts.DEBUG) {
                     Log.i(TAG, "user canceled purchase");
                 }
                 logProductActivity(request.mProductId, "dismissed purchase dialog");
+                TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);
+
             } else {
                 if (Consts.DEBUG) {
                     Log.i(TAG, "purchase failed");
@@ -208,8 +212,7 @@ public class Billing extends Activity implements OnClickListener,
 
     /** An array of product list entries for the products that can be purchased. */
     private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
-        new CatalogEntry("01navigation", R.string.navigation, Managed.MANAGED),
-        new CatalogEntry("01bikegame", R.string.bike_game, Managed.MANAGED),
+        new CatalogEntry("1coins", R.string.park_coins, Managed.UNMANAGED),
         new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
                 Managed.UNMANAGED),
         new CatalogEntry("android.test.canceled", R.string.android_test_canceled,
