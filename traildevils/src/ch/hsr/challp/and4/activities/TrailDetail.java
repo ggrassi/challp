@@ -36,7 +36,7 @@ public class TrailDetail extends Activity{
 	private Favorites favs;
 	private Handler handler;
 	private WeatherSet ws = null;
-	private boolean weatherIsVisible = true;
+	private boolean weatherIsLoaded = true;
 	private ImageButton favBtn;
 	private Drawable weather1Draw;
 	private Drawable weather2Draw;
@@ -65,17 +65,25 @@ public class TrailDetail extends Activity{
 			this.country = activeTrail.getCountry();
 			this.city = activeTrail.getNextCity();
 			
-			ImageView img = (ImageView)findViewById(R.id.trailImage);
+			ImageView mainTrailImage = (ImageView)findViewById(R.id.trailImage);
 			TextView name = (TextView)findViewById(R.id.detailTrailName);
 			TextView countryView = (TextView)findViewById(R.id.detailTrailCountry);
 			TextView placeView = (TextView)findViewById(R.id.detailTrailPlace);
 			TextView descriptionView = (TextView)findViewById(R.id.detailTrailDescription);
 			
-			Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
-			img.setImageDrawable(trailDraw);
+			if(activeTrail.getImageUrl800()==null || activeTrail.getImageUrl800().equals("null")){
+				mainTrailImage.setImageResource(R.drawable.trail_dummy);
+			}else{
+				Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
+				mainTrailImage.setImageDrawable(trailDraw);
+			}
 			
 			name.setText(activeTrail.getName());
-			placeView.setText(activeTrail.getNextCity());
+			
+			String place = (activeTrail.getNextCity()==null || activeTrail.getNextCity().equals("null")) 
+					? "n.a." : activeTrail.getNextCity();
+			placeView.setText(place);
+			
 			countryView.setText(country);
 			descriptionView.setText(activeTrail.getDescription());
 			
@@ -148,26 +156,28 @@ public class TrailDetail extends Activity{
 			weather2Draw = loadImage(imgURLAfterTomorrow.toString());
 			weather3Draw = loadImage(imgURLAfterAfterTomorrow.toString());
 		}else{
-			weatherIsVisible = false;
+			weatherIsLoaded = false;
 		}
 	}
 	
 	private void setWeatherData() throws Exception{
-		ImageView weather_1 = (ImageView)findViewById(R.id.weather1);
-		ImageView weather_2 = (ImageView)findViewById(R.id.weather2);
-		ImageView weather_3 = (ImageView)findViewById(R.id.weather3);
-		
-		weather_1.setImageDrawable(weather1Draw);
-		weather_2.setImageDrawable(weather2Draw);
-		weather_3.setImageDrawable(weather3Draw);
-		
-		TextView celcius_1 = (TextView)findViewById(R.id.celcius1);
-		TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
-		TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
-		
-		celcius_1.setText(" "+getDayOfWeek(0)+"\n "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
-		celcius_2.setText(" "+getDayOfWeek(1)+"\n "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
-		celcius_3.setText(" "+getDayOfWeek(2)+"\n "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
+		if(weatherIsLoaded){
+			ImageView weather_1 = (ImageView)findViewById(R.id.weather1);
+			ImageView weather_2 = (ImageView)findViewById(R.id.weather2);
+			ImageView weather_3 = (ImageView)findViewById(R.id.weather3);
+			
+			weather_1.setImageDrawable(weather1Draw);
+			weather_2.setImageDrawable(weather2Draw);
+			weather_3.setImageDrawable(weather3Draw);
+			
+			TextView celcius_1 = (TextView)findViewById(R.id.celcius1);
+			TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
+			TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
+			
+			celcius_1.setText(" "+getDayOfWeek(0)+"\n "+getMinTemp(0)+"°/"+getMaxTemp(0)+"°");
+			celcius_2.setText(" "+getDayOfWeek(1)+"\n "+getMinTemp(1)+"°/"+getMaxTemp(1)+"°");
+			celcius_3.setText(" "+getDayOfWeek(2)+"\n "+getMinTemp(2)+"°/"+getMaxTemp(2)+"°");
+		}
 	}
 
 	private Drawable loadImage(String url)
@@ -192,7 +202,10 @@ public class TrailDetail extends Activity{
 	
 	private WeatherSet getWeatherSet(){
 		try{
-			String queryString = "http://www.google.com/ig/api?weather=" + city + "," + country;
+			String urlCity = city.replaceAll("ü", "ue");
+			urlCity.replaceAll("ä", "ae");
+			urlCity.replaceAll("ö","oe");
+			String queryString = "http://www.google.com/ig/api?weather=" + urlCity + "," + country;
 			URL url = new URL(queryString.replace(" ", "%20"));
 			
 			SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -258,10 +271,9 @@ public class TrailDetail extends Activity{
 						try {
 							setWeatherData();
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						if(weatherIsVisible){
+						if(weatherIsLoaded){
 							View weatherContainer = findViewById(R.id.weatherContainer);
 							weatherContainer.setVisibility(View.VISIBLE);
 						}
