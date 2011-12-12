@@ -86,10 +86,10 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 						UserLocationListener.getInstance().getLatitude(),
 						UserLocationListener.getInstance().getLongitude(),
 						results);
-				distance.append(Math.round(results[0] / 1000));
+				distance.append(Math.round(results[0] / 1000) + " km");
 				if (trail.getNextCity() != null
 						&& !trail.getNextCity().equals("null")) {
-					distance.append(" km, ");
+					distance.append(", ");
 				}
 			}
 		} catch (Exception e) {
