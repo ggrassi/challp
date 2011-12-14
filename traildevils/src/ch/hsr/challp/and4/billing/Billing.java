@@ -212,15 +212,19 @@ public class Billing extends Activity implements OnClickListener,
 
     /** An array of product list entries for the products that can be purchased. */
     private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
-        new CatalogEntry("1coins", R.string.park_coins, Managed.UNMANAGED),
+        new CatalogEntry("map_01", R.string.park_coins, Managed.MANAGED),
         new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
-                Managed.UNMANAGED),
-        new CatalogEntry("android.test.canceled", R.string.android_test_canceled,
                 Managed.UNMANAGED),
         new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
                 Managed.UNMANAGED),
-        new CatalogEntry("android.test.item_unavailable", R.string.android_test_item_unavailable,
-                Managed.UNMANAGED),
+//        new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
+//                Managed.UNMANAGED),
+//        new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
+//                Managed.UNMANAGED),
+//                new CatalogEntry("android.test.canceled", R.string.android_test_canceled,
+//                		Managed.UNMANAGED),
+//        new CatalogEntry("android.test.item_unavailable", R.string.android_test_item_unavailable,
+//                Managed.UNMANAGED),
     };
 
     private String mItemName;
@@ -370,7 +374,7 @@ public class Billing extends Activity implements OnClickListener,
         mOwnedItemsCursor = mPurchaseDatabase.queryAllPurchasedItems();
         startManagingCursor(mOwnedItemsCursor);
         String[] from = new String[] { PurchaseDatabase.PURCHASED_PRODUCT_ID_COL,
-                PurchaseDatabase.PURCHASED_QUANTITY_COL
+                PurchaseDatabase.PURCHASED_QUANTITY_COL ,
         };
         int[] to = new int[] { R.id.item_name, R.id.item_quantity };
         mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.item_row,
