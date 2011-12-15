@@ -28,9 +28,9 @@ public class StartScreen extends LicenseCheckActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.start_screen);
-		
+
 		textViewToChange = (TextView) findViewById(R.id.wait_text);
-		
+
 		setWaitText("Getting Position...");
 		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
 		locationService = tmpLocationService;
@@ -52,7 +52,7 @@ public class StartScreen extends LicenseCheckActivity {
 	}
 
 	private void setWaitText(String WaitText) {
-		
+
 	}
 
 	final Handler handler = new Handler() {
@@ -85,11 +85,10 @@ public class StartScreen extends LicenseCheckActivity {
 				} else {
 					Trail.deserialize();
 				}
-				
-				
+
 				Intent ac = new Intent(".activities.TabContainer");
 				startActivity(ac);
-				
+
 			} catch (Exception e) {
 				Log.d("tag", "filtrino: " + "error:" + e.toString());
 			} finally {

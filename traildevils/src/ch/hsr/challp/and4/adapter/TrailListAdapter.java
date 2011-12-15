@@ -44,6 +44,11 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	}
 
 	public abstract void update(Observable observable, Object data);
+	
+	public  void loadNew(){
+		trails = Trail.getTrails();
+		notifyDataSetChanged();
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -86,6 +91,7 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 						UserLocationListener.getInstance().getLatitude(),
 						UserLocationListener.getInstance().getLongitude(),
 						results);
+				Trail.calculateEntfernungen();
 				distance.append(Math.round(results[0] / 1000) + " km");
 				if (trail.getNextCity() != null
 						&& !trail.getNextCity().equals("null")) {

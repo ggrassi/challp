@@ -38,6 +38,10 @@ public class JSONParser extends Thread {
 		this.handler = handler;
 	}
 
+	public JSONParser(String url) {
+		this.url = url;
+	}
+
 	@Override
 	public void run() {
 		sendMessage("Start Syncing...");
@@ -49,23 +53,24 @@ public class JSONParser extends Thread {
 		try {
 			String readedFeed = readFeed();
 			JSONArray jsonArray = new JSONArray(readedFeed);
-			
+
 			sendMessage("Parsing...");
-			
+
 			for (int i = 0; i < jsonArray.length(); i++) {
 				if (i % (jsonArray.length() / 10) == 0) {
-					if((i / (jsonArray.length() / 10) * 10) <= 100) {
-						sendMessage("Parsing... ( " + (i / (jsonArray.length() / 10) * 10) + " % )");
+					if ((i / (jsonArray.length() / 10) * 10) <= 100) {
+						sendMessage("Parsing... ( "
+								+ (i / (jsonArray.length() / 10) * 10) + " % )");
 					}
 				}
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				
+
 				@SuppressWarnings("unused")
 				Trail tmpTrail = new Trail(jsonObject);
 			}
-			Trail.serialize();
+				Trail.serialize();
 		} catch (Exception e) {
-			//TODO: Handle Excpetion
+			// TODO: Handle Excpetion
 			e.printStackTrace();
 		}
 	}
@@ -103,8 +108,10 @@ public class JSONParser extends Thread {
 	}
 
 	private void sendMessage(String text) {
-		Message msg = handler.obtainMessage();
-		msg.obj = text;
-		handler.sendMessage(msg);
+		if (handler != null) {
+			Message msg = handler.obtainMessage();
+			msg.obj = text;
+			handler.sendMessage(msg);
+		}
 	}
 }

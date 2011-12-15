@@ -8,13 +8,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.location.Location;
 import android.util.Log;
+import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 
-public class Trail implements Serializable {
+public class Trail implements Serializable, Comparable {
 
 	/**
 	 * 
@@ -24,9 +27,9 @@ public class Trail implements Serializable {
 	private static final String SERIALIZE_FILE_NAME = "trails.ser";
 	private static final File SERIALIZE_FILE = new File(SERIALIZE_PATH,
 			SERIALIZE_FILE_NAME);
-	// private static HashMap<Integer, Trail> trails;
+	private static String sorting = "Trail-ID";
 	private static ArrayList<Trail> trailsArrayList = new ArrayList<Trail>();
-	private int trailId, trailDevilsId;
+	private int trailId, trailDevilsId, entfernung;
 	float gmapX;
 	float gmapY;
 	private String country, description, imageUrl120, imageUrl800, name,
@@ -42,18 +45,11 @@ public class Trail implements Serializable {
 	}
 
 	public static ArrayList<Trail> getTrails() {
-		if (trailsArrayList == null || trailsArrayList.size() == 0) {
-			deserialize();
-		}
 		return trailsArrayList;
 	}
 
-	public static void deserialize() {
+	public synchronized static void deserialize() {
 		if (serializationExists()) {
-			Log.d("tag",
-					"filtrino: " + "start deserialize: "
-							+ System.currentTimeMillis());
-
 			FileInputStream fis = null;
 			ObjectInputStream in = null;
 			try {
@@ -61,10 +57,6 @@ public class Trail implements Serializable {
 				in = new ObjectInputStream(fis);
 				trailsArrayList = (ArrayList<Trail>) in.readObject();
 				in.close();
-				Log.d("tag",
-						"filtrino: " + "end deserialize: "
-								+ System.currentTimeMillis());
-
 			} catch (IOException ex) {
 				Log.d("tag", "filtrino: " + ex.toString() + "");
 			} catch (ClassNotFoundException e) {
@@ -84,9 +76,6 @@ public class Trail implements Serializable {
 			Log.d("tag", "filtrino: " + "error: " + e.toString());
 
 		}
-		Log.d("tag",
-				"filtrino: " + "start serialize: " + System.currentTimeMillis());
-
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
 		try {
@@ -94,10 +83,6 @@ public class Trail implements Serializable {
 			out = new ObjectOutputStream(fos);
 			out.writeObject(trailsArrayList);
 			out.close();
-			Log.d("tag",
-					"filtrino: " + "end serialize: "
-							+ System.currentTimeMillis());
-
 		} catch (IOException ex) {
 			Log.d("tag", "filtrino: " + "error: " + ex.toString());
 
@@ -107,14 +92,6 @@ public class Trail implements Serializable {
 	public static boolean serializationExists() {
 		return SERIALIZE_FILE.exists();
 	}
-
-	// private static ArrayList<Trail> converteMapToArrayList() {
-	// ArrayList<Trail> myTrail = new ArrayList<Trail>();
-	// for (Integer trail : new TreeSet<Integer>(trails.keySet())) {
-	// myTrail.add(trails.get(trail));
-	// }
-	// return myTrail;
-	// }
 
 	private void converte(JSONObject trailJson) throws JSONException {
 		trailId = trailJson.getInt("Id");
@@ -171,6 +148,75 @@ public class Trail implements Serializable {
 
 	public void setTrailDevilsId(int trailDevilsId) {
 		this.trailDevilsId = trailDevilsId;
+	}
+
+	public int compareTo(Object another) {
+		Trail temp = (Trail) another;
+		if (sorting.equalsIgnoreCase("trail-id")) {
+			return new Integer(getTrailId()).compareTo(new Integer(temp
+					.getTrailId()));
+		}
+		if (sorting.equalsIgnoreCase("name")) {
+			return this.name.compareTo(temp.getName());
+		}
+
+		if (temp.getEntfernung() == this.getEntfernung()) {
+			return 0;
+		}
+		if (temp.getEntfernung() == 0) {
+			return -1;
+		}
+		if (this.getEntfernung() == 0) {
+			return 1;
+		}
+		if (this.getEntfernung() < temp.getEntfernung()) {
+			return -1;
+		} else {
+			return 1;
+		}
+
+	}
+
+	public static void deleteEveryThing() {
+		deleteRecursive(new File("/data/data/ch.hsr.challp.and/files"));
+		trailsArrayList.clear();
+	}
+
+	private static void deleteRecursive(File fileOrDirectory) {
+		if (fileOrDirectory.isDirectory()) {
+			for (File child : fileOrDirectory.listFiles()) {
+				deleteRecursive(child);
+			}
+		}
+		fileOrDirectory.delete();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void setSorting(String string) {
+		sorting = string;
+		Collections.sort(trailsArrayList);
+	}
+
+	public int getEntfernung() {
+		return entfernung;
+	}
+
+	public void setEntfernung(int entfernung) {
+		this.entfernung = entfernung;
+	}
+
+	public static void calculateEntfernungen() {
+		for (Trail t : trailsArrayList) {
+			if (t.getGmapX() > 0 && t.getGmapY() > 0) {
+				float[] results = new float[3];
+				Location.distanceBetween(t.getGmapX(), t.getGmapY(),
+						UserLocationListener.getInstance().getLatitude(),
+						UserLocationListener.getInstance().getLongitude(),
+						results);
+				t.setEntfernung(Math.round(results[0]));
+			}
+		}
+
 	}
 
 }

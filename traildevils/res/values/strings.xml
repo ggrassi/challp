@@ -42,6 +42,11 @@
     <string name="buy_tab_title">Kaufen</string>
     <string name="park_coins">Park Coins</string>
     <string name="navigation">Navigation</string>
+    <string name="reload">Neu laden</string>
+    <string name="sorting_ID" >Trail-ID</string>
+    <string name="sorting_Name" >Name</string>
+    <string name="sorting_Entfernung" >Entfernung</string>
+    
 
     <!-- The following are reserved skus defined by Market for testing. -->
     <string name="android_test_canceled">android.test.canceled</string>

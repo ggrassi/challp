@@ -3,12 +3,16 @@ package ch.hsr.challp.and4.activities;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+<<<<<<< HEAD
+=======
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+>>>>>>> daniboy
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -18,7 +22,11 @@ import android.widget.ListView;
 import ch.hsr.challp.and4.adapter.BrowserListAdapter;
 import ch.hsr.challp.and4.adapter.TrailListAdapter;
 import ch.hsr.challp.and4.domain.Trail;
+<<<<<<< HEAD
+import ch.hsr.challp.android4.R;
+=======
 import ch.hsr.challp.and4.technicalservices.JSONParser;
+>>>>>>> daniboy
 
 public class TrailBrowserTab extends ListActivity {
 	final static int LOAD_NEW = 0, SORT_ID = 1, SORT_NAME = 2,
@@ -97,11 +105,14 @@ public class TrailBrowserTab extends ListActivity {
 
 	@Override
 	public boolean onSearchRequested() {
+		Log.d("tag", "filtrino: Inner-SEARCH!!");
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
 	public void reload() {
 		Trail.deleteEveryThing();
 		JSONParser parser = new JSONParser(getString(R.string.JSONUrl));
@@ -113,4 +124,5 @@ public class TrailBrowserTab extends ListActivity {
 		}
 		((TrailListAdapter) getListAdapter()).loadNew();
 	}
+>>>>>>> daniboy
 }
