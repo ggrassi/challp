@@ -3,6 +3,7 @@ package ch.hsr.challp.and4.activities;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import ch.hsr.challp.and4.adapter.BrowserListAdapter;
 import ch.hsr.challp.and4.adapter.TrailListAdapter;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
+import ch.hsr.challp.android4.R;
 
 public class TrailBrowserTab extends ListActivity {
 	final static int LOAD_NEW = 0, SORT_ID = 1, SORT_NAME = 2,
