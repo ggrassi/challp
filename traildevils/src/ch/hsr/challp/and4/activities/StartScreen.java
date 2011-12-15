@@ -51,8 +51,8 @@ public class StartScreen extends LicenseCheckActivity {
 		super.onDestroy();
 	}
 
-	private void setWaitText(String WaitText) {
-
+	private void setWaitText(String waitText) {
+		textViewToChange.setText(waitText);
 	}
 
 	final Handler handler = new Handler() {
@@ -76,6 +76,7 @@ public class StartScreen extends LicenseCheckActivity {
 		@Override
 		public void run() {
 			try {
+				Trail.getTrails().clear();
 				if (!Trail.serializationExists()) {
 					JSONParser parser = new JSONParser(
 							getString(R.string.JSONUrl), myH);

@@ -23,8 +23,6 @@ import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.android4.R;
 
 public class TrailBrowserTab extends ListActivity {
-	final static int LOAD_NEW = 0, SORT_ID = 1, SORT_NAME = 2,
-			SORT_FAVORITS = 3, SORT_DISTANCE = 4;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,8 +79,8 @@ public class TrailBrowserTab extends ListActivity {
 		case R.id.sort_Entfernung:
 			sort("Entfernung");
 			return true;
-		case R.id.sort_ID:
-			sort("trail-id");
+		case R.id.sort_Favorits:
+			sort("Beliebtheit");
 			return true;
 		case R.id.sort_Name:
 			sort("name");
