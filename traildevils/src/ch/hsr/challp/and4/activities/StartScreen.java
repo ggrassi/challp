@@ -51,8 +51,8 @@ public class StartScreen extends LicenseCheckActivity {
 		super.onDestroy();
 	}
 
-	private void setWaitText(String WaitText) {
-
+	private void setWaitText(String waitText) {
+		textViewToChange.setText(waitText);
 	}
 
 	final Handler handler = new Handler() {

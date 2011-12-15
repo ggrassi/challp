@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/sort_ID"
-        android:title="@string/sorting_ID"/>
+        android:id="@+id/sort_Favorits"
+        android:title="@string/sorting_Favorits"/>
 
     <item
         android:id="@+id/sort_Name"

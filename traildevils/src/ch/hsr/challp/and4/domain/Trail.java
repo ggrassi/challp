@@ -23,13 +23,13 @@ public class Trail implements Serializable, Comparable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String SERIALIZE_PATH = "/data/data/ch.hsr.challp.and/files/trails";
+	private static final String SERIALIZE_PATH = "/data/data/ch.hsr.challp.android4/files/trails";
 	private static final String SERIALIZE_FILE_NAME = "trails.ser";
 	private static final File SERIALIZE_FILE = new File(SERIALIZE_PATH,
 			SERIALIZE_FILE_NAME);
 	private static String sorting = "Trail-ID";
 	private static ArrayList<Trail> trailsArrayList = new ArrayList<Trail>();
-	private int trailId, trailDevilsId, entfernung;
+	private int trailId, trailDevilsId, entfernung, favorits;
 	float gmapX;
 	float gmapY;
 	private String country, description, imageUrl120, imageUrl800, name,
@@ -104,6 +104,7 @@ public class Trail implements Serializable, Comparable {
 		name = trailJson.getString("Name");
 		nextCity = trailJson.getString("NextCity");
 		setTrailDevilsId(trailJson.getInt("TraildevilsId"));
+		setFavorits(trailJson.getInt("Favorits"));
 	}
 
 	public float getGmapX() {
@@ -152,9 +153,9 @@ public class Trail implements Serializable, Comparable {
 
 	public int compareTo(Object another) {
 		Trail temp = (Trail) another;
-		if (sorting.equalsIgnoreCase("trail-id")) {
-			return new Integer(getTrailId()).compareTo(new Integer(temp
-					.getTrailId()));
+		if (sorting.equalsIgnoreCase("beliebtheit")) {
+			return new Integer(temp.getFavorits()).compareTo(new Integer(
+					getFavorits()));
 		}
 		if (sorting.equalsIgnoreCase("name")) {
 			return this.name.compareTo(temp.getName());
@@ -217,6 +218,14 @@ public class Trail implements Serializable, Comparable {
 			}
 		}
 
+	}
+
+	public int getFavorits() {
+		return favorits;
+	}
+
+	public void setFavorits(int favorits) {
+		this.favorits = favorits;
 	}
 
 }
