@@ -78,11 +78,9 @@ public class Billing extends Activity implements OnClickListener,
 
     private BillingService mBillingService;
     private Button mBuyButton;
-    private Button mEditPayloadButton;
-    private TextView mLogTextView;
     private Spinner mSelectItemSpinner;
     private ListView mOwnedItemsTable;
-    private SimpleCursorAdapter mOwnedItemsAdapter;
+//    private SimpleCursorAdapter mOwnedItemsAdapter;
     private PurchaseDatabase mPurchaseDatabase;
     private Cursor mOwnedItemsCursor;
     private Set<String> mOwnedItems = new HashSet<String>();
@@ -124,7 +122,6 @@ public class Billing extends Activity implements OnClickListener,
             if (supported) {
                 restoreDatabase();
                 mBuyButton.setEnabled(true);
-                mEditPayloadButton.setEnabled(true);
             } else {
                 showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
             }
@@ -184,8 +181,6 @@ public class Billing extends Activity implements OnClickListener,
                 if (Consts.DEBUG) {
                     Log.d(TAG, "completed RestoreTransactions request");
                 }
-                // Update the shared preferences so that we don't perform
-                // a RestoreTransactions again.
                 SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = prefs.edit();
                 edit.putBoolean(DB_INITIALIZED, true);
@@ -212,7 +207,7 @@ public class Billing extends Activity implements OnClickListener,
 
     /** An array of product list entries for the products that can be purchased. */
     private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
-        new CatalogEntry("map_01", R.string.park_coins, Managed.MANAGED),
+        new CatalogEntry("map_01", R.string.map, Managed.MANAGED),
         new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
                 Managed.UNMANAGED),
         new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
@@ -285,7 +280,6 @@ public class Billing extends Activity implements OnClickListener,
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(LOG_TEXT_KEY, Html.toHtml((Spanned) mLogTextView.getText()));
     }
 
     /**
@@ -295,7 +289,6 @@ public class Billing extends Activity implements OnClickListener,
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            mLogTextView.setText(Html.fromHtml(savedInstanceState.getString(LOG_TEXT_KEY)));
         }
     }
 
@@ -357,14 +350,10 @@ public class Billing extends Activity implements OnClickListener,
      * Sets up the UI.
      */
     private void setupWidgets() {
-        mLogTextView = (TextView) findViewById(R.id.log);
         mBuyButton = (Button) findViewById(R.id.buy_button);
         mBuyButton.setEnabled(false);
         mBuyButton.setOnClickListener(this);
 
-        mEditPayloadButton = (Button) findViewById(R.id.payload_edit_button);
-        mEditPayloadButton.setEnabled(false);
-        mEditPayloadButton.setOnClickListener(this);
 
         mSelectItemSpinner = (Spinner) findViewById(R.id.item_choices);
         mCatalogAdapter = new CatalogAdapter(this, CATALOG);
@@ -377,17 +366,15 @@ public class Billing extends Activity implements OnClickListener,
                 PurchaseDatabase.PURCHASED_QUANTITY_COL ,
         };
         int[] to = new int[] { R.id.item_name, R.id.item_quantity };
-        mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.item_row,
-                mOwnedItemsCursor, from, to);
-        mOwnedItemsTable = (ListView) findViewById(R.id.owned_items);
-        mOwnedItemsTable.setAdapter(mOwnedItemsAdapter);
+//        mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.item_row,
+//                mOwnedItemsCursor, from, to);
+//        mOwnedItemsTable = (ListView) findViewById(R.id.owned_items);
+//        mOwnedItemsTable.setAdapter(mOwnedItemsAdapter);
     }
 
     private void prependLogEntry(CharSequence cs) {
         SpannableStringBuilder contents = new SpannableStringBuilder(cs);
         contents.append('\n');
-        contents.append(mLogTextView.getText());
-        mLogTextView.setText(contents);
     }
 
     private void logProductActivity(String product, String activity) {
@@ -470,9 +457,7 @@ public class Billing extends Activity implements OnClickListener,
             if (!mBillingService.requestPurchase(mSku, mPayloadContents)) {
                 showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
             }
-        } else if (v == mEditPayloadButton) {
-            showPayloadEditDialog();
-        }
+        } 
     }
 
     /**

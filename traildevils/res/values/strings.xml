@@ -40,13 +40,15 @@
     <string name="items_you_own">Items you own</string>
     <string name="recent_transactions">Recent activity</string>
     <string name="buy_tab_title">Kaufen</string>
-    <string name="park_coins">Park Coins</string>
+    <string name="map">Map</string>
     <string name="navigation">Navigation</string>
     <string name="reload">Neu laden</string>
     <string name="sorting_ID" >Trail-ID</string>
     <string name="sorting_Name" >Name</string>
     <string name="sorting_Entfernung" >Entfernung</string>
-    
+    <string name="sale_text_map_title" >Trail2Map</string>
+    <string name="sale_text_map" >Sei cool und lasse dir alle deine Trails auf der Map darstellen. Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</string>
+     <string name="price" >CHF 1.00</string>
 
     <!-- The following are reserved skus defined by Market for testing. -->
     <string name="android_test_canceled">android.test.canceled</string>
