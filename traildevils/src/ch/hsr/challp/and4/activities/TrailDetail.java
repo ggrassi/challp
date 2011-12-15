@@ -167,23 +167,25 @@ public class TrailDetail extends Activity{
 		}
 	}
 	
-	private void setWeatherData(){
-		ImageView weather_1 = (ImageView)findViewById(R.id.weather1);
-		ImageView weather_2 = (ImageView)findViewById(R.id.weather2);
-		ImageView weather_3 = (ImageView)findViewById(R.id.weather3);
-		
+	private void setWeatherData() {
+		ImageView weather_1 = (ImageView) findViewById(R.id.weather1);
+		ImageView weather_2 = (ImageView) findViewById(R.id.weather2);
+		ImageView weather_3 = (ImageView) findViewById(R.id.weather3);
+
 		weather_1.setImageDrawable(weather1Draw);
 		weather_2.setImageDrawable(weather2Draw);
 		weather_3.setImageDrawable(weather3Draw);
-		
-		TextView celcius_1 = (TextView)findViewById(R.id.celcius1);
-		TextView celcius_2 = (TextView)findViewById(R.id.celcius2);
-		TextView celcius_3 = (TextView)findViewById(R.id.celcius3);
-		
-		celcius_1.setText(" "+getDayOfWeek(0)+": "+getMinTemp(0)+"�/"+getMaxTemp(0)+"�");
-		celcius_2.setText(" "+getDayOfWeek(1)+": "+getMinTemp(1)+"�/"+getMaxTemp(1)+"�");
-		celcius_3.setText(" "+getDayOfWeek(2)+": "+getMinTemp(2)+"�/"+getMaxTemp(2)+"�");
 
+		TextView celcius_1 = (TextView) findViewById(R.id.celcius1);
+		TextView celcius_2 = (TextView) findViewById(R.id.celcius2);
+		TextView celcius_3 = (TextView) findViewById(R.id.celcius3);
+
+		celcius_1.setText(" " + getDayOfWeek(0) + "\n " + getMinTemp(0)
+				+ "\u00b0 /" + getMaxTemp(0) + "\u00b0");
+		celcius_2.setText(" " + getDayOfWeek(1) + "\n " + getMinTemp(1)
+				+ "\u00b0/" + getMaxTemp(1) + "\u00b0");
+		celcius_3.setText(" " + getDayOfWeek(2) + "\n " + getMinTemp(2)
+				+ "\u00b0/" + getMaxTemp(2) + "\u00b0");
 	}
 
 	private Drawable loadImage(String url)
@@ -245,25 +247,25 @@ public class TrailDetail extends Activity{
 	private String getDayOfWeek(int day){
 		String shortDayName = getWeatherSet().getWeatherForecastConditions().get(day).getDayofWeek();
 		if(shortDayName.equals("Mon")){
-			return "Monday";
+			return "Montag";
 		}
 		if(shortDayName.equals("Tue")){
-			return "Tuesday";
+			return "Dienstag";
 		}
 		if(shortDayName.equals("Wed")){
-			return "Wednesday";
+			return "Mittwoch";
 		}
 		if(shortDayName.equals("Thu")){
-			return "Thursday";
+			return "Donnerstag";
 		}
 		if(shortDayName.equals("Fri")){
-			return "Friday";
+			return "Freitag";
 		}
 		if(shortDayName.equals("Sat")){
-			return "Saturday";
+			return "Samstag";
 		}
 		if(shortDayName.equals("Sun")){
-			return "Sunday";
+			return "Sonntag";
 		}
 		return "";
 	}
