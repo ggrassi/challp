@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/sort_ID"
+        android:title="@string/sorting_ID"/>
+
+    <item
+        android:id="@+id/sort_Name"
+        android:title="@string/sorting_Name"/>
+
+    <item
+        android:id="@+id/sort_Entfernung"
+        android:title="@string/sorting_Entfernung"/>
+
+    <item
+        android:id="@+id/reload"
+        android:title="@string/reload"/>
+
+</menu>
