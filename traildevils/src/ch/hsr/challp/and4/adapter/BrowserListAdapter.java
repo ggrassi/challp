@@ -15,10 +15,8 @@ public class BrowserListAdapter extends TrailListAdapter implements Observer {
 	}
 
 	public void update(Observable observable, Object data) {
-		this.clear();
-		for (Trail trail : Trail.getTrails()) {
-			this.trails.add(trail);
-		}
-		notifyDataSetChanged();
+		super.loadNew();
 	}
+
+	
 }

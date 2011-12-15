@@ -5,7 +5,6 @@ import java.util.Observer;
 
 import android.content.Context;
 import ch.hsr.challp.and4.application.TrailDevils;
-import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
 
 public class FavoritesListAdapter extends TrailListAdapter implements Observer {
@@ -22,11 +21,12 @@ public class FavoritesListAdapter extends TrailListAdapter implements Observer {
 	}
 
 	public void update(Observable observable, Object data) {
-		this.clear();
-		for (Trail trail : app.getFavorites().getTrails()) {
-			this.add(trail);
-		}
-		notifyDataSetChanged();
+		loadNew();
 	}
 
+	@Override
+	public void loadNew() {
+		trails = app.getFavorites().getTrails();
+		notifyDataSetChanged();
+	}
 }

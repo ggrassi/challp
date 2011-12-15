@@ -3,6 +3,7 @@ package ch.hsr.challp.and4.activities;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -16,13 +17,18 @@ import ch.hsr.challp.and4.domain.Trail;
 public class FavoritesTab extends ListActivity {
 
 	@Override
+	protected void onResume() {
+		((FavoritesListAdapter)getListAdapter()).loadNew();
+		Log.d("tag", "filtrino: i'm here");
+		super.onResume();
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_view);
 
 		TrailDevils app = ((TrailDevils) getApplication());
-
-		setListAdapter(new FavoritesListAdapter(this, R.layout.list_entry, app));
 
 		ListView lv = getListView();
 		lv.setTextFilterEnabled(true);
@@ -38,6 +44,8 @@ public class FavoritesTab extends ListActivity {
 				startActivity(ac);
 			}
 		});
+		setListAdapter(new FavoritesListAdapter(this, R.layout.list_entry, app));
+
 	}
 
 	@Override
