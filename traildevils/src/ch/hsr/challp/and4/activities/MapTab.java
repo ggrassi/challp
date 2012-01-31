@@ -71,6 +71,7 @@ public class MapTab extends MapActivity {
 
 		mapView.getOverlays().add(myLocationOverlay);
 		myLocationOverlay.enableMyLocation();
+		myLocationOverlay.enableCompass();
 		myLocationOverlay.runOnFirstFix(new Runnable() {
 
 			public void run() {
@@ -86,7 +87,6 @@ public class MapTab extends MapActivity {
 		final int maxZoomLevel = mapView.getMaxZoomLevel() - 11;
 		mapCtrl.setZoom(maxZoomLevel);
 		mapView.setBuiltInZoomControls(true);
-
 		mapView.setSatellite(true);
 	}
 

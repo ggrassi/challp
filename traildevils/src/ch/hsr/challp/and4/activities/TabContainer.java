@@ -1,19 +1,45 @@
 package ch.hsr.challp.and4.activities;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
-import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.billing.Billing;
+import ch.hsr.challp.android4.R;
 
-public class TabContainer extends TabActivity {
+public class TabContainer extends TabActivity implements Observer {
+	
+	private TabContainer tabContainer;
+
+	public TabContainer(){
+		tabContainer = this;
+	}
+	
+	private static Context context;
+
+    public static Context getMapTabContext(){
+    	return context;
+    }
 	
 	public static TabHost tabHost = null;
 	
+	public void onUpdate(boolean bol){
+		setEnabled(bol);
+	}
+	
+	private void setEnabled(boolean bol) {
+		TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(bol);
+		
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.tab);
 		TabHost tab = getTabHost();
 		tabHost = tab;
@@ -29,7 +55,7 @@ public class TabContainer extends TabActivity {
 		spec = tabHost.newTabSpec("dif_things").setIndicator(this.getString(R.string.map_tab_title), getResources().getDrawable(R.drawable.ic_tab_map))
 				.setContent(intent);
 		tabHost.addTab(spec);
-		TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);
+		context= tabHost.getContext();
 		
 		intent = new Intent().setClass(this, FavoritesTab.class);
 		spec = tabHost.newTabSpec("favorites_tab").setIndicator(this.getString(R.string.favorites_tab_title), getResources().getDrawable(R.drawable.ic_tab_favorites))
@@ -40,5 +66,10 @@ public class TabContainer extends TabActivity {
 		spec = tabHost.newTabSpec("inappbilling_tab").setIndicator(this.getString(R.string.buy_tab_title), getResources().getDrawable(R.drawable.ic_tab_billing))
 				.setContent(intent);
 		tabHost.addTab(spec);
+	}
+
+	public void update(Observable obj, Object arg) {
+	            resp = (String) arg;
+	            System.out.println("\nReceived Response: "+ resp );
 	}
 }

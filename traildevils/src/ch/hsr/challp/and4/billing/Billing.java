@@ -45,6 +45,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.hsr.challp.android4.R;
@@ -157,7 +158,6 @@ public class Billing extends Activity implements OnClickListener,
                 if (Consts.DEBUG) {
                     Log.i(TAG, "purchase was successfully sent to server");
                 }
-                TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);
                 logProductActivity(request.mProductId, "sending purchase request");
             } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
                 if (Consts.DEBUG) {
@@ -174,7 +174,8 @@ public class Billing extends Activity implements OnClickListener,
             }
         }
 
-        @Override
+
+		@Override
         public void onRestoreTransactionsResponse(RestoreTransactions request,
                 ResponseCode responseCode) {
             if (responseCode == ResponseCode.RESULT_OK) {
