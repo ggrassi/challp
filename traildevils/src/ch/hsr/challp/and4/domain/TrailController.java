@@ -9,8 +9,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
+import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.sortingStrategy.SortStrategy;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 
@@ -22,6 +24,11 @@ public class TrailController {
 	private final String SERIALIZE_FILE_NAME = "trails.ser";
 	private final File SERIALIZE_FILE = new File(SERIALIZE_PATH,
 			SERIALIZE_FILE_NAME);
+	private Context ctx;
+
+	public TrailController(Context ctx) {
+		this.ctx = ctx;
+	}
 
 	public ArrayList<Trail> getTrails() {
 		return trailsArrayList;
@@ -101,13 +108,14 @@ public class TrailController {
 	}
 
 	public void calculateDistances() {
-		for (Trail t : trailsArrayList) {
+		final UserLocationListener locationListener = ((TrailDevils) ctx
+				.getApplicationContext()).getUserLocation();
+		for (final Trail t : trailsArrayList) {
 			if (t.getGmapX() > 0 && t.getGmapY() > 0) {
 				float[] results = new float[3];
 				Location.distanceBetween(t.getGmapX(), t.getGmapY(),
-						UserLocationListener.getInstance().getLatitude(),
-						UserLocationListener.getInstance().getLongitude(),
-						results);
+						locationListener.getLatitude(),
+						locationListener.getLongitude(), results);
 				t.setDistance(Math.round(results[0]));
 			}
 		}

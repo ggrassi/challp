@@ -36,7 +36,8 @@ public class StartScreen extends LicenseCheckActivity {
 		setWaitText("Getting Position...");
 		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
 		locationService = tmpLocationService;
-		UserLocationListener.getInstance();
+		((TrailDevils) getApplication())
+				.setUserLocation(new UserLocationListener());
 
 		setWaitText("Checking Application License...");
 		checkLicense();
@@ -78,8 +79,9 @@ public class StartScreen extends LicenseCheckActivity {
 		@Override
 		public void run() {
 			try {
-				
-				final TrailController trailController = ((TrailDevils)getApplication()).getTrailController();
+
+				final TrailController trailController = ((TrailDevils) getApplication())
+						.getTrailController();
 				trailController.getTrails().clear();
 				if (!trailController.serializationExists()) {
 					final JSONParser parser = new JSONParser(

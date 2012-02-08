@@ -38,13 +38,15 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	protected ArrayList<Trail> trails;
 	private TrailFilter filter;
 	protected TrailController trailController;
+	private TrailDevils app;
 
 	public TrailListAdapter(Context context, int textViewResourceId,
 			ArrayList<Trail> trails) {
 		super(context, textViewResourceId, trails);
-		trailController = ((TrailDevils)context.getApplicationContext()).getTrailController();
+		app = ((TrailDevils)context.getApplicationContext());
+		trailController = app.getTrailController();
 		this.trails=trails;
-		UserLocationListener.getInstance().addObserver(this);
+		app.getUserLocation().addObserver(this);
 	}
 
 	public abstract void update(Observable observable, Object data);
@@ -79,7 +81,7 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		try {
 			setTrailIcon(trail, v);
 		} catch (Exception e) {
-			Log.d("tag", "filtrino: " + e.toString() + "");
+			Log.e(this.getClass().getName(), e.toString());
 		}
 		v.setId(trail.getTrailId());
 		return v;
@@ -89,11 +91,11 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		StringBuilder distance = new StringBuilder();
 		try {
 			float[] results = new float[3];
-			if (UserLocationListener.getInstance().getLatitude() > 0
-					&& UserLocationListener.getInstance().getLongitude() > 0) {
+			if (app.getUserLocation().getLatitude() > 0
+					&& app.getUserLocation().getLongitude() > 0) {
 				Location.distanceBetween(trail.getGmapX(), trail.getGmapY(),
-						UserLocationListener.getInstance().getLatitude(),
-						UserLocationListener.getInstance().getLongitude(),
+						app.getUserLocation().getLatitude(),
+						app.getUserLocation().getLongitude(),
 						results);
 				trailController.calculateDistances();
 				distance.append(Math.round(results[0] / 1000) + " km");

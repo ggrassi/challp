@@ -16,8 +16,12 @@
 
 package ch.hsr.challp.and4.billing;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 import android.app.Activity;
@@ -33,7 +37,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,520 +46,580 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.activities.TabContainer;
 import ch.hsr.challp.and4.billing.BillingService.RequestPurchase;
 import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
 import ch.hsr.challp.and4.billing.Consts.PurchaseState;
 import ch.hsr.challp.and4.billing.Consts.ResponseCode;
+import ch.hsr.challp.android4.R;
 
 /**
  * A sample application that demonstrates in-app billing.
  */
 public class Billing extends Activity implements OnClickListener,
-        OnItemSelectedListener {
-    private static final String TAG = "BillingLog";
+		OnItemSelectedListener, Observer {
+	private static final String TAG = "BillingLog";
 
-    /**
-     * Used for storing the log text.
-     */
-    private static final String LOG_TEXT_KEY = "Logtext";
+	/**
+	 * Used for storing the log text.
+	 */
+	private static final String LOG_TEXT_KEY = "Logtext";
 
-    /**
-     * The SharedPreferences key for recording whether we initialized the
-     * database.  If false, then we perform a RestoreTransactions request
-     * to get all the purchases for this user.
-     */
-    private static final String DB_INITIALIZED = "db_initialized";
+	/**
+	 * The SharedPreferences key for recording whether we initialized the
+	 * database. If false, then we perform a RestoreTransactions request to get
+	 * all the purchases for this user.
+	 */
+	private static final String DB_INITIALIZED = "db_initialized";
 
-    private MyPurchaseObserver mPurchaseObserver;
-    private Handler mHandler;
+	private MyPurchaseObserver mPurchaseObserver;
+	private Handler mHandler;
 
-    private BillingService mBillingService;
-    private Button mBuyButton;
-    private Spinner mSelectItemSpinner;
-    private ListView mOwnedItemsTable;
-//    private SimpleCursorAdapter mOwnedItemsAdapter;
-    private PurchaseDatabase mPurchaseDatabase;
-    private Cursor mOwnedItemsCursor;
-    private Set<String> mOwnedItems = new HashSet<String>();
+	private BillingService mBillingService;
+	private Button mBuyButton;
+	private Spinner mSelectItemSpinner;
+	private ListView mOwnedItemsTable;
+	// private SimpleCursorAdapter mOwnedItemsAdapter;
+	private PurchaseDatabase mPurchaseDatabase;
+	private Cursor mOwnedItemsCursor;
+	private Set<String> mOwnedItems = new HashSet<String>();
 
-    /**
-     * The developer payload that is sent with subsequent
-     * purchase requests.
-     */
-    private String mPayloadContents = null;
+	/**
+	 * The developer payload that is sent with subsequent purchase requests.
+	 */
+	private String mPayloadContents = null;
 
-    private static final int DIALOG_CANNOT_CONNECT_ID = 1;
-    private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 2;
+	private static final int DIALOG_CANNOT_CONNECT_ID = 1;
+	private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 2;
 
-    /**
-     * Each product in the catalog is either MANAGED or UNMANAGED.  MANAGED
-     * means that the product can be purchased only once per user (such as a new
-     * level in a game). The purchase is remembered by Android Market and
-     * can be restored if this application is uninstalled and then
-     * re-installed. UNMANAGED is used for products that can be used up and
-     * purchased multiple times (such as poker chips). It is up to the
-     * application to keep track of UNMANAGED products for the user.
-     */
-    private enum Managed { MANAGED, UNMANAGED }
+	/**
+	 * Each product in the catalog is either MANAGED or UNMANAGED. MANAGED means
+	 * that the product can be purchased only once per user (such as a new level
+	 * in a game). The purchase is remembered by Android Market and can be
+	 * restored if this application is uninstalled and then re-installed.
+	 * UNMANAGED is used for products that can be used up and purchased multiple
+	 * times (such as poker chips). It is up to the application to keep track of
+	 * UNMANAGED products for the user.
+	 */
+	private enum Managed {
+		MANAGED, UNMANAGED
+	}
 
-    /**
-     * A {@link PurchaseObserver} is used to get callbacks when Android Market sends
-     * messages to this application so that we can update the UI.
-     */
-    private class MyPurchaseObserver extends PurchaseObserver {
-        public MyPurchaseObserver(Handler handler) {
-            super(Billing.this, handler);
-        }
+	class ConcreteObservable implements ch.hsr.challp.and4.billing.Observable {
+		private ArrayList observers = new ArrayList();
 
-        @Override
-        public void onBillingSupported(boolean supported) {
-            if (Consts.DEBUG) {
-                Log.i(TAG, "supported: " + supported);
-            }
-            if (supported) {
-                restoreDatabase();
-                mBuyButton.setEnabled(true);
-            } else {
-                showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
-            }
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * ch.hsr.challp.and4.billing.Observable#addObserver(java.util.Observer)
+		 */
+		public void addObserver(Observer obsrNewObserver) {
+			if (!observers.contains(obsrNewObserver)) {
+				observers.add(obsrNewObserver);
+			}
+		}
 
-        @Override
-        public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
-                int quantity, long purchaseTime, String developerPayload) {
-            if (Consts.DEBUG) {
-                Log.i(TAG, "onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
-            }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * ch.hsr.challp.and4.billing.Observable#removeObserver(java.util.Observer
+		 * )
+		 */
+		public void removeObserver(Observer obsrToRemove) {
+			observers.remove(obsrToRemove);
+		}
 
-            if (developerPayload == null) {
-                logProductActivity(itemId, purchaseState.toString());
-            } else {
-                logProductActivity(itemId, purchaseState + "\n\t" + developerPayload);
-            }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see ch.hsr.challp.and4.billing.Observable#notifyObservers()
+		 */
+		public void notifyObservers() {
+    	Iterator elements = observers.iterator();
+    	while (elements.hasNext()) {
+//    	(Observer)elements.next()).update(null, null);
+    	}
+    	}
+	}
 
-            if (purchaseState == PurchaseState.PURCHASED) {
-                mOwnedItems.add(itemId);
-            }
-            mCatalogAdapter.setOwnedItems(mOwnedItems);
-            mOwnedItemsCursor.requery();
-        }
+	/**
+	 * A {@link PurchaseObserver} is used to get callbacks when Android Market
+	 * sends messages to this application so that we can update the UI.
+	 */
+	private class MyPurchaseObserver extends PurchaseObserver {
+		public MyPurchaseObserver(Handler handler) {
+			super(Billing.this, handler);
+		}
 
-        @Override
-        public void onRequestPurchaseResponse(RequestPurchase request,
-                ResponseCode responseCode) {
-            if (Consts.DEBUG) {
-                Log.d(TAG, request.mProductId + ": " + responseCode);
-            }
-            if (responseCode == ResponseCode.RESULT_OK) {
-                if (Consts.DEBUG) {
-                    Log.i(TAG, "purchase was successfully sent to server");
-                }
-                TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);
-                logProductActivity(request.mProductId, "sending purchase request");
-            } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
-                if (Consts.DEBUG) {
-                    Log.i(TAG, "user canceled purchase");
-                }
-                logProductActivity(request.mProductId, "dismissed purchase dialog");
-                TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);
+		@Override
+		public void onBillingSupported(boolean supported) {
+			if (Consts.DEBUG) {
+				Log.i(TAG, "supported: " + supported);
+			}
+			if (supported) {
+				restoreDatabase();
+				mBuyButton.setEnabled(true);
+			} else {
+				showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
+			}
+		}
 
-            } else {
-                if (Consts.DEBUG) {
-                    Log.i(TAG, "purchase failed");
-                }
-                logProductActivity(request.mProductId, "request purchase returned " + responseCode);
-            }
-        }
+		@Override
+		public void onPurchaseStateChange(PurchaseState purchaseState,
+				String itemId, int quantity, long purchaseTime,
+				String developerPayload) {
+			if (Consts.DEBUG) {
+				Log.i(TAG, "onPurchaseStateChange() itemId: " + itemId + " "
+						+ purchaseState);
+			}
 
-        @Override
-        public void onRestoreTransactionsResponse(RestoreTransactions request,
-                ResponseCode responseCode) {
-            if (responseCode == ResponseCode.RESULT_OK) {
-                if (Consts.DEBUG) {
-                    Log.d(TAG, "completed RestoreTransactions request");
-                }
-                SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = prefs.edit();
-                edit.putBoolean(DB_INITIALIZED, true);
-                edit.commit();
-            } else {
-                if (Consts.DEBUG) {
-                    Log.d(TAG, "RestoreTransactions error: " + responseCode);
-                }
-            }
-        }
-    }
+			if (developerPayload == null) {
+				logProductActivity(itemId, purchaseState.toString());
+			} else {
+				logProductActivity(itemId, purchaseState + "\n\t"
+						+ developerPayload);
+			}
 
-    private static class CatalogEntry {
-        public String sku;
-        public int nameId;
-        public Managed managed;
+			if (purchaseState == PurchaseState.PURCHASED) {
+				mOwnedItems.add(itemId);
+			}
+			mCatalogAdapter.setOwnedItems(mOwnedItems);
+			mOwnedItemsCursor.requery();
+		}
 
-        public CatalogEntry(String sku, int nameId, Managed managed) {
-            this.sku = sku;
-            this.nameId = nameId;
-            this.managed = managed;
-        }
-    }
+		@Override
+		public void onRequestPurchaseResponse(RequestPurchase request,
+				ResponseCode responseCode) {
+			if (Consts.DEBUG) {
+				Log.d(TAG, request.mProductId + ": " + responseCode);
+			}
+			if (responseCode == ResponseCode.RESULT_OK) {
+				if (Consts.DEBUG) {
+					Log.i(TAG, "purchase was successfully sent to server");
+				}
+				TabContainer.tabHost.getTabWidget().getChildTabViewAt(1)
+						.setEnabled(true);
+				logProductActivity(request.mProductId,
+						"sending purchase request");
+			} else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
+				if (Consts.DEBUG) {
+					Log.i(TAG, "user canceled purchase");
+				}
+				logProductActivity(request.mProductId,
+						"dismissed purchase dialog");
+				TabContainer.tabHost.getTabWidget().getChildTabViewAt(1)
+						.setEnabled(false);
 
-    /** An array of product list entries for the products that can be purchased. */
-    private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
-        new CatalogEntry("map_01", R.string.map, Managed.MANAGED),
-        new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
-                Managed.UNMANAGED),
-        new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
-                Managed.UNMANAGED),
-//        new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
-//                Managed.UNMANAGED),
-//        new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
-//                Managed.UNMANAGED),
-//                new CatalogEntry("android.test.canceled", R.string.android_test_canceled,
-//                		Managed.UNMANAGED),
-//        new CatalogEntry("android.test.item_unavailable", R.string.android_test_item_unavailable,
-//                Managed.UNMANAGED),
-    };
+			} else {
+				if (Consts.DEBUG) {
+					Log.i(TAG, "purchase failed");
+				}
+				logProductActivity(request.mProductId,
+						"request purchase returned " + responseCode);
+			}
+		}
 
-    private String mItemName;
-    private String mSku;
-    private CatalogAdapter mCatalogAdapter;
+		@Override
+		public void onRestoreTransactionsResponse(RestoreTransactions request,
+				ResponseCode responseCode) {
+			if (responseCode == ResponseCode.RESULT_OK) {
+				if (Consts.DEBUG) {
+					Log.d(TAG, "completed RestoreTransactions request");
+				}
+				SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+				SharedPreferences.Editor edit = prefs.edit();
+				edit.putBoolean(DB_INITIALIZED, true);
+				edit.commit();
+			} else {
+				if (Consts.DEBUG) {
+					Log.d(TAG, "RestoreTransactions error: " + responseCode);
+				}
+			}
+		}
+	}
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.billing);
+	private static class CatalogEntry {
+		public String sku;
+		public int nameId;
+		public Managed managed;
 
-        mHandler = new Handler();
-        mPurchaseObserver = new MyPurchaseObserver(mHandler);
-        mBillingService = new BillingService();
-        mBillingService.setContext(this);
+		public CatalogEntry(String sku, int nameId, Managed managed) {
+			this.sku = sku;
+			this.nameId = nameId;
+			this.managed = managed;
+		}
+	}
 
-        mPurchaseDatabase = new PurchaseDatabase(this);
-        setupWidgets();
+	/** An array of product list entries for the products that can be purchased. */
+	private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
+			new CatalogEntry("map_01", R.string.map, Managed.MANAGED),
+			new CatalogEntry("android.test.purchased",
+					R.string.android_test_purchased, Managed.UNMANAGED),
+			new CatalogEntry("android.test.refunded",
+					R.string.android_test_refunded, Managed.UNMANAGED),
+	// new CatalogEntry("android.test.purchased",
+	// R.string.android_test_purchased,
+	// Managed.UNMANAGED),
+	// new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
+	// Managed.UNMANAGED),
+	// new CatalogEntry("android.test.canceled", R.string.android_test_canceled,
+	// Managed.UNMANAGED),
+	// new CatalogEntry("android.test.item_unavailable",
+	// R.string.android_test_item_unavailable,
+	// Managed.UNMANAGED),
+	};
 
-        // Check if billing is supported.
-        ResponseHandler.register(mPurchaseObserver);
-        if (!mBillingService.checkBillingSupported()) {
-            showDialog(DIALOG_CANNOT_CONNECT_ID);
-        }
-    }
+	private String mItemName;
+	private String mSku;
+	private CatalogAdapter mCatalogAdapter;
 
-    /**
-     * Called when this activity becomes visible.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        ResponseHandler.register(mPurchaseObserver);
-        initializeOwnedItems();
-    }
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.billing);
 
-    /**
-     * Called when this activity is no longer visible.
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        ResponseHandler.unregister(mPurchaseObserver);
-    }
+		mHandler = new Handler();
+		mPurchaseObserver = new MyPurchaseObserver(mHandler);
+		mBillingService = new BillingService();
+		mBillingService.setContext(this);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPurchaseDatabase.close();
-        mBillingService.unbind();
-    }
+		mPurchaseDatabase = new PurchaseDatabase(this);
+		setupWidgets();
 
-    /**
-     * Save the context of the log so simple things like rotation will not
-     * result in the log being cleared.
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+		// Check if billing is supported.
+		ResponseHandler.register(mPurchaseObserver);
+		if (!mBillingService.checkBillingSupported()) {
+			showDialog(DIALOG_CANNOT_CONNECT_ID);
+		}
+	}
 
-    /**
-     * Restore the contents of the log if it has previously been saved.
-     */
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-        }
-    }
+	/**
+	 * Called when this activity becomes visible.
+	 */
+	@Override
+	protected void onStart() {
+		super.onStart();
+		ResponseHandler.register(mPurchaseObserver);
+		initializeOwnedItems();
+	}
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-        case DIALOG_CANNOT_CONNECT_ID:
-            return createDialog(R.string.cannot_connect_title,
-                    R.string.cannot_connect_message);
-        case DIALOG_BILLING_NOT_SUPPORTED_ID:
-            return createDialog(R.string.billing_not_supported_title,
-                    R.string.billing_not_supported_message);
-        default:
-            return null;
-        }
-    }
+	/**
+	 * Called when this activity is no longer visible.
+	 */
+	@Override
+	protected void onStop() {
+		super.onStop();
+		ResponseHandler.unregister(mPurchaseObserver);
+	}
 
-    private Dialog createDialog(int titleId, int messageId) {
-        String helpUrl = replaceLanguageAndRegion(getString(R.string.help_url));
-        if (Consts.DEBUG) {
-            Log.i(TAG, helpUrl);
-        }
-        final Uri helpUri = Uri.parse(helpUrl);
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mPurchaseDatabase.close();
+		mBillingService.unbind();
+	}
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(titleId)
-            .setIcon(android.R.drawable.stat_sys_warning)
-            .setMessage(messageId)
-            .setCancelable(false)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(R.string.learn_more, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, helpUri);
-                    startActivity(intent);
-                }
-            });
-        return builder.create();
-    }
+	/**
+	 * Save the context of the log so simple things like rotation will not
+	 * result in the log being cleared.
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
 
-    /**
-     * Replaces the language and/or country of the device into the given string.
-     * The pattern "%lang%" will be replaced by the device's language code and
-     * the pattern "%region%" will be replaced with the device's country code.
-     *
-     * @param str the string to replace the language/country within
-     * @return a string containing the local language and region codes
-     */
-    private String replaceLanguageAndRegion(String str) {
-        // Substitute language and or region if present in string
-        if (str.contains("%lang%") || str.contains("%region%")) {
-            Locale locale = Locale.getDefault();
-            str = str.replace("%lang%", locale.getLanguage().toLowerCase());
-            str = str.replace("%region%", locale.getCountry().toLowerCase());
-        }
-        return str;
-    }
+	/**
+	 * Restore the contents of the log if it has previously been saved.
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (savedInstanceState != null) {
+		}
+	}
 
-    /**
-     * Sets up the UI.
-     */
-    private void setupWidgets() {
-        mBuyButton = (Button) findViewById(R.id.buy_button);
-        mBuyButton.setEnabled(false);
-        mBuyButton.setOnClickListener(this);
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DIALOG_CANNOT_CONNECT_ID:
+			return createDialog(R.string.cannot_connect_title,
+					R.string.cannot_connect_message);
+		case DIALOG_BILLING_NOT_SUPPORTED_ID:
+			return createDialog(R.string.billing_not_supported_title,
+					R.string.billing_not_supported_message);
+		default:
+			return null;
+		}
+	}
 
+	private Dialog createDialog(int titleId, int messageId) {
+		String helpUrl = replaceLanguageAndRegion(getString(R.string.help_url));
+		if (Consts.DEBUG) {
+			Log.i(TAG, helpUrl);
+		}
+		final Uri helpUri = Uri.parse(helpUrl);
 
-        mSelectItemSpinner = (Spinner) findViewById(R.id.item_choices);
-        mCatalogAdapter = new CatalogAdapter(this, CATALOG);
-        mSelectItemSpinner.setAdapter(mCatalogAdapter);
-        mSelectItemSpinner.setOnItemSelectedListener(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(titleId)
+				.setIcon(android.R.drawable.stat_sys_warning)
+				.setMessage(messageId)
+				.setCancelable(false)
+				.setPositiveButton(android.R.string.ok, null)
+				.setNegativeButton(R.string.learn_more,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent intent = new Intent(Intent.ACTION_VIEW,
+										helpUri);
+								startActivity(intent);
+							}
+						});
+		return builder.create();
+	}
 
-        mOwnedItemsCursor = mPurchaseDatabase.queryAllPurchasedItems();
-        startManagingCursor(mOwnedItemsCursor);
-        String[] from = new String[] { PurchaseDatabase.PURCHASED_PRODUCT_ID_COL,
-                PurchaseDatabase.PURCHASED_QUANTITY_COL ,
-        };
-        int[] to = new int[] { R.id.item_name, R.id.item_quantity };
-//        mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.item_row,
-//                mOwnedItemsCursor, from, to);
-//        mOwnedItemsTable = (ListView) findViewById(R.id.owned_items);
-//        mOwnedItemsTable.setAdapter(mOwnedItemsAdapter);
-    }
+	/**
+	 * Replaces the language and/or country of the device into the given string.
+	 * The pattern "%lang%" will be replaced by the device's language code and
+	 * the pattern "%region%" will be replaced with the device's country code.
+	 * 
+	 * @param str
+	 *            the string to replace the language/country within
+	 * @return a string containing the local language and region codes
+	 */
+	private String replaceLanguageAndRegion(String str) {
+		// Substitute language and or region if present in string
+		if (str.contains("%lang%") || str.contains("%region%")) {
+			Locale locale = Locale.getDefault();
+			str = str.replace("%lang%", locale.getLanguage().toLowerCase());
+			str = str.replace("%region%", locale.getCountry().toLowerCase());
+		}
+		return str;
+	}
 
-    private void prependLogEntry(CharSequence cs) {
-        SpannableStringBuilder contents = new SpannableStringBuilder(cs);
-        contents.append('\n');
-    }
+	/**
+	 * Sets up the UI.
+	 */
+	private void setupWidgets() {
+		mBuyButton = (Button) findViewById(R.id.buy_button);
+		mBuyButton.setEnabled(false);
+		mBuyButton.setOnClickListener(this);
 
-    private void logProductActivity(String product, String activity) {
-        SpannableStringBuilder contents = new SpannableStringBuilder();
-        contents.append(Html.fromHtml("<b>" + product + "</b>: "));
-        contents.append(activity);
-        prependLogEntry(contents);
-    }
+		mSelectItemSpinner = (Spinner) findViewById(R.id.item_choices);
+		mCatalogAdapter = new CatalogAdapter(this, CATALOG);
+		mSelectItemSpinner.setAdapter(mCatalogAdapter);
+		mSelectItemSpinner.setOnItemSelectedListener(this);
 
-    /**
-     * If the database has not been initialized, we send a
-     * RESTORE_TRANSACTIONS request to Android Market to get the list of purchased items
-     * for this user. This happens if the application has just been installed
-     * or the user wiped data. We do not want to do this on every startup, rather, we want to do
-     * only when the database needs to be initialized.
-     */
-    private void restoreDatabase() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        boolean initialized = prefs.getBoolean(DB_INITIALIZED, false);
-        if (!initialized) {
-            mBillingService.restoreTransactions();
-            Toast.makeText(this, R.string.restoring_transactions, Toast.LENGTH_LONG).show();
-        }
-    }
+		mOwnedItemsCursor = mPurchaseDatabase.queryAllPurchasedItems();
+		startManagingCursor(mOwnedItemsCursor);
+		String[] from = new String[] {
+				PurchaseDatabase.PURCHASED_PRODUCT_ID_COL,
+				PurchaseDatabase.PURCHASED_QUANTITY_COL, };
+		int[] to = new int[] { R.id.item_name, R.id.item_quantity };
+		// mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.item_row,
+		// mOwnedItemsCursor, from, to);
+		// mOwnedItemsTable = (ListView) findViewById(R.id.owned_items);
+		// mOwnedItemsTable.setAdapter(mOwnedItemsAdapter);
+	}
 
-    /**
-     * Creates a background thread that reads the database and initializes the
-     * set of owned items.
-     */
-    private void initializeOwnedItems() {
-        new Thread(new Runnable() {
-            public void run() {
-                doInitializeOwnedItems();
-            }
-        }).start();
-    }
+	private void prependLogEntry(CharSequence cs) {
+		SpannableStringBuilder contents = new SpannableStringBuilder(cs);
+		contents.append('\n');
+	}
 
-    /**
-     * Reads the set of purchased items from the database in a background thread
-     * and then adds those items to the set of owned items in the main UI
-     * thread.
-     */
-    private void doInitializeOwnedItems() {
-        Cursor cursor = mPurchaseDatabase.queryAllPurchasedItems();
-        if (cursor == null) {
-            return;
-        }
+	private void logProductActivity(String product, String activity) {
+		SpannableStringBuilder contents = new SpannableStringBuilder();
+		contents.append(Html.fromHtml("<b>" + product + "</b>: "));
+		contents.append(activity);
+		prependLogEntry(contents);
+	}
 
-        final Set<String> ownedItems = new HashSet<String>();
-        try {
-            int productIdCol = cursor.getColumnIndexOrThrow(
-                    PurchaseDatabase.PURCHASED_PRODUCT_ID_COL);
-            while (cursor.moveToNext()) {
-                String productId = cursor.getString(productIdCol);
-                ownedItems.add(productId);
-            }
-        } finally {
-            cursor.close();
-        }
+	/**
+	 * If the database has not been initialized, we send a RESTORE_TRANSACTIONS
+	 * request to Android Market to get the list of purchased items for this
+	 * user. This happens if the application has just been installed or the user
+	 * wiped data. We do not want to do this on every startup, rather, we want
+	 * to do only when the database needs to be initialized.
+	 */
+	private void restoreDatabase() {
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		boolean initialized = prefs.getBoolean(DB_INITIALIZED, false);
+		if (!initialized) {
+			mBillingService.restoreTransactions();
+			Toast.makeText(this, R.string.restoring_transactions,
+					Toast.LENGTH_LONG).show();
+		}
+	}
 
-        // We will add the set of owned items in a new Runnable that runs on
-        // the UI thread so that we don't need to synchronize access to
-        // mOwnedItems.
-        mHandler.post(new Runnable() {
-            public void run() {
-                mOwnedItems.addAll(ownedItems);
-                mCatalogAdapter.setOwnedItems(mOwnedItems);
-            }
-        });
-    }
+	/**
+	 * Creates a background thread that reads the database and initializes the
+	 * set of owned items.
+	 */
+	private void initializeOwnedItems() {
+		new Thread(new Runnable() {
+			public void run() {
+				doInitializeOwnedItems();
+			}
+		}).start();
+	}
 
-    /**
-     * Called when a button is pressed.
-     */
-    public void onClick(View v) {
-        if (v == mBuyButton) {
-            if (Consts.DEBUG) {
-                Log.d(TAG, "buying: " + mItemName + " sku: " + mSku);
-            }
-            if (!mBillingService.requestPurchase(mSku, mPayloadContents)) {
-                showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
-            }
-        } 
-    }
+	/**
+	 * Reads the set of purchased items from the database in a background thread
+	 * and then adds those items to the set of owned items in the main UI
+	 * thread.
+	 */
+	private void doInitializeOwnedItems() {
+		Cursor cursor = mPurchaseDatabase.queryAllPurchasedItems();
+		if (cursor == null) {
+			return;
+		}
 
-    /**
-     * Displays the dialog used to edit the payload dialog.
-     */
-    private void showPayloadEditDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        final View view = View.inflate(this, R.layout.edit_payload, null);
-        final TextView payloadText = (TextView) view.findViewById(R.id.payload_text);
-        if (mPayloadContents != null) {
-            payloadText.setText(mPayloadContents);
-        }
+		final Set<String> ownedItems = new HashSet<String>();
+		try {
+			int productIdCol = cursor
+					.getColumnIndexOrThrow(PurchaseDatabase.PURCHASED_PRODUCT_ID_COL);
+			while (cursor.moveToNext()) {
+				String productId = cursor.getString(productIdCol);
+				ownedItems.add(productId);
+			}
+		} finally {
+			cursor.close();
+		}
 
-        dialog.setView(view);
-        dialog.setPositiveButton(
-                R.string.edit_payload_accept,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        mPayloadContents = payloadText.getText().toString();
-                    }
-                });
-        dialog.setNegativeButton(
-                R.string.edit_payload_clear,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (dialog != null) {
-                            mPayloadContents = null;
-                            dialog.cancel();
-                        }
-                    }
-                });
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            public void onCancel(DialogInterface dialog) {
-                if (dialog != null) {
-                    dialog.cancel();
-                }
-            }
-        });
-        dialog.show();
-    }
+		// We will add the set of owned items in a new Runnable that runs on
+		// the UI thread so that we don't need to synchronize access to
+		// mOwnedItems.
+		mHandler.post(new Runnable() {
+			public void run() {
+				mOwnedItems.addAll(ownedItems);
+				mCatalogAdapter.setOwnedItems(mOwnedItems);
+			}
+		});
+	}
 
-    /**
-     * Called when an item in the spinner is selected.
-     */
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mItemName = getString(CATALOG[position].nameId);
-        mSku = CATALOG[position].sku;
-    }
+	/**
+	 * Called when a button is pressed.
+	 */
+	public void onClick(View v) {
+		if (v == mBuyButton) {
+			if (Consts.DEBUG) {
+				Log.d(TAG, "buying: " + mItemName + " sku: " + mSku);
+			}
+			if (!mBillingService.requestPurchase(mSku, mPayloadContents)) {
+				showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
+			}
+		}
+	}
 
-    public void onNothingSelected(AdapterView<?> arg0) {
-    }
+	/**
+	 * Displays the dialog used to edit the payload dialog.
+	 */
+	private void showPayloadEditDialog() {
+		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+		final View view = View.inflate(this, R.layout.edit_payload, null);
+		final TextView payloadText = (TextView) view
+				.findViewById(R.id.payload_text);
+		if (mPayloadContents != null) {
+			payloadText.setText(mPayloadContents);
+		}
 
-    /**
-     * An adapter used for displaying a catalog of products.  If a product is
-     * managed by Android Market and already purchased, then it will be "grayed-out" in
-     * the list and not selectable.
-     */
-    private static class CatalogAdapter extends ArrayAdapter<String> {
-        private CatalogEntry[] mCatalog;
-        private Set<String> mOwnedItems = new HashSet<String>();
+		dialog.setView(view);
+		dialog.setPositiveButton(R.string.edit_payload_accept,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						mPayloadContents = payloadText.getText().toString();
+					}
+				});
+		dialog.setNegativeButton(R.string.edit_payload_clear,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						if (dialog != null) {
+							mPayloadContents = null;
+							dialog.cancel();
+						}
+					}
+				});
+		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+				if (dialog != null) {
+					dialog.cancel();
+				}
+			}
+		});
+		dialog.show();
+	}
 
-        public CatalogAdapter(Context context, CatalogEntry[] catalog) {
-            super(context, android.R.layout.simple_spinner_item);
-            mCatalog = catalog;
-            for (CatalogEntry element : catalog) {
-                add(context.getString(element.nameId));
-            }
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        }
+	/**
+	 * Called when an item in the spinner is selected.
+	 */
+	public void onItemSelected(AdapterView<?> parent, View view, int position,
+			long id) {
+		mItemName = getString(CATALOG[position].nameId);
+		mSku = CATALOG[position].sku;
+	}
 
-        public void setOwnedItems(Set<String> ownedItems) {
-            mOwnedItems = ownedItems;
-            notifyDataSetChanged();
-        }
+	public void onNothingSelected(AdapterView<?> arg0) {
+	}
 
-        @Override
-        public boolean areAllItemsEnabled() {
-            // Return false to have the adapter call isEnabled()
-            return false;
-        }
+	/**
+	 * An adapter used for displaying a catalog of products. If a product is
+	 * managed by Android Market and already purchased, then it will be
+	 * "grayed-out" in the list and not selectable.
+	 */
+	private static class CatalogAdapter extends ArrayAdapter<String> {
+		private CatalogEntry[] mCatalog;
+		private Set<String> mOwnedItems = new HashSet<String>();
 
-        @Override
-        public boolean isEnabled(int position) {
-            // If the item at the given list position is not purchasable,
-            // then prevent the list item from being selected.
-            CatalogEntry entry = mCatalog[position];
-            if (entry.managed == Managed.MANAGED && mOwnedItems.contains(entry.sku)) {
-                return false;
-            }
-            return true;
-        }
+		public CatalogAdapter(Context context, CatalogEntry[] catalog) {
+			super(context, android.R.layout.simple_spinner_item);
+			mCatalog = catalog;
+			for (CatalogEntry element : catalog) {
+				add(context.getString(element.nameId));
+			}
+			setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		}
 
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            // If the item at the given list position is not purchasable, then
-            // "gray out" the list item.
-            View view = super.getDropDownView(position, convertView, parent);
-            view.setEnabled(isEnabled(position));
-            return view;
-        }
-    }
+		public void setOwnedItems(Set<String> ownedItems) {
+			mOwnedItems = ownedItems;
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public boolean areAllItemsEnabled() {
+			// Return false to have the adapter call isEnabled()
+			return false;
+		}
+
+		@Override
+		public boolean isEnabled(int position) {
+			// If the item at the given list position is not purchasable,
+			// then prevent the list item from being selected.
+			CatalogEntry entry = mCatalog[position];
+			if (entry.managed == Managed.MANAGED
+					&& mOwnedItems.contains(entry.sku)) {
+				return false;
+			}
+			return true;
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			// If the item at the given list position is not purchasable, then
+			// "gray out" the list item.
+			View view = super.getDropDownView(position, convertView, parent);
+			view.setEnabled(isEnabled(position));
+			return view;
+		}
+	}
+
+	public void update(Observable observable, Object data) {
+		// TODO Auto-generated method stub
+
+	}
 }
