@@ -5,9 +5,11 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import ch.hsr.challp.android4.R;
+import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.technicalservices.TrailizedOverlay;
+import ch.hsr.challp.android4.R;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -26,13 +28,14 @@ public class MapTab extends MapActivity {
 	private TrailizedOverlay trailizedOverlay;
 	private GeoPoint point;
 	private OverlayItem overlayItem;
+	private TrailController trailController;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
-
+		trailController=((TrailDevils)getApplication()).getTrailController();
 		initMapView();
 		initMyLocationOverlay();
 		initTrailOverlay();
@@ -43,7 +46,7 @@ public class MapTab extends MapActivity {
 		drawable = this.getResources().getDrawable(R.drawable.map_marker);
 		trailizedOverlay = new TrailizedOverlay(drawable, getApplicationContext());
 
-		for (Trail trail : Trail.getTrails()) {
+		for (Trail trail : trailController.getTrails()) {
 			point = new GeoPoint((int) (trail.getGmapX() * 1E6),
 					(int) (trail.getGmapY() * 1E6));
 			overlayItem = new OverlayItem(point, trail.getName(),

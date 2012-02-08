@@ -5,12 +5,15 @@ import java.util.Observable;
 
 import android.content.Context;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
 
 public class Favorites extends Observable {
 	private FavoritesDBHelper helper = null;
-
-	public Favorites(Context context) {
+	private TrailController trailController =null;
+	
+	public Favorites(Context context, TrailController trailController) {
 		helper = new FavoritesDBHelper(context);
+		this.trailController = trailController;
 	}
 
 	public void addTrail(Trail trail) {
@@ -27,7 +30,7 @@ public class Favorites extends Observable {
 
 	public ArrayList<Trail> getTrails() {
 		ArrayList<Trail> favorites = new ArrayList<Trail>();
-		ArrayList<Trail> trails = Trail.getTrails();
+		ArrayList<Trail> trails = trailController.getTrails();
 		ArrayList<Integer> ids = helper.getIds();
 		for (Integer id : ids) {
 			for (Trail trail : trails) {

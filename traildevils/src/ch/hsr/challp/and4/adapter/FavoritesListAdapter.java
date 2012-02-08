@@ -1,5 +1,6 @@
 package ch.hsr.challp.and4.adapter;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,7 +16,7 @@ public class FavoritesListAdapter extends TrailListAdapter implements Observer {
 			TrailDevils app) {
 		super(context, textViewResourceId, app.getFavorites().getTrails());
 		this.app = app;
-		Favorites favs = app.getFavorites();
+		final Favorites favs = app.getFavorites();
 		this.trails = favs.getTrails();
 		favs.addObserver(this);
 	}

@@ -7,10 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
-import ch.hsr.challp.android4.R;
+import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
+import ch.hsr.challp.android4.R;
 
 public class StartScreen extends LicenseCheckActivity {
 	private static Object locationService = null;
@@ -76,22 +78,24 @@ public class StartScreen extends LicenseCheckActivity {
 		@Override
 		public void run() {
 			try {
-				Trail.getTrails().clear();
-				if (!Trail.serializationExists()) {
-					JSONParser parser = new JSONParser(
-							getString(R.string.JSONUrl), myH);
+				
+				final TrailController trailController = ((TrailDevils)getApplication()).getTrailController();
+				trailController.getTrails().clear();
+				if (!trailController.serializationExists()) {
+					final JSONParser parser = new JSONParser(
+							getString(R.string.JSONUrl), myH, trailController);
 					parser.setCtx(getBaseContext());
 					parser.start();
 					parser.join();
 				} else {
-					Trail.deserialize();
+					trailController.deserialize();
 				}
 
-				Intent ac = new Intent(".activities.TabContainer");
+				final Intent ac = new Intent(".activities.TabContainer");
 				startActivity(ac);
 
 			} catch (Exception e) {
-				Log.d("tag", "filtrino: " + "error:" + e.toString());
+				Log.e(this.getClass().getName(), e.toString());
 			} finally {
 				finish();
 			}
