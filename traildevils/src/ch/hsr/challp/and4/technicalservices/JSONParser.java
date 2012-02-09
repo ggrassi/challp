@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.domain.Trail;
 
 public class JSONParser extends Thread {
@@ -29,13 +31,21 @@ public class JSONParser extends Thread {
 		this.ctx = ctx;
 	}
 
-	String url;
-	Handler handler;
-	Context ctx;
+	private String url;
+	private Handler handler;
+	private Context ctx;
+	private TrailController trailController;
 
 	public JSONParser(String url, Handler handler) {
 		this.url = url;
 		this.handler = handler;
+	}
+
+	public JSONParser(String url, Handler handler,
+			TrailController trailController) {
+		this.url = url;
+		this.handler = handler;
+		this.trailController = trailController;
 	}
 
 	public JSONParser(String url) {
@@ -55,7 +65,6 @@ public class JSONParser extends Thread {
 			JSONArray jsonArray = new JSONArray(readedFeed);
 
 			sendMessage("Parsing...");
-
 			for (int i = 0; i < jsonArray.length(); i++) {
 				if (i % (jsonArray.length() / 10) == 0) {
 					if ((i / (jsonArray.length() / 10) * 10) <= 100) {
@@ -63,14 +72,12 @@ public class JSONParser extends Thread {
 								+ (i / (jsonArray.length() / 10) * 10) + " % )");
 					}
 				}
-				JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-				@SuppressWarnings("unused")
-				Trail tmpTrail = new Trail(jsonObject);
+				final Trail tmpTrail = new Trail(jsonArray.getJSONObject(i));
+				trailController.getTrails().add(tmpTrail);
 			}
-				Trail.serialize();
+			trailController.serialize();
 		} catch (Exception e) {
-			// TODO: Handle Excpetion
+			Log.e(this.getClass().getName(), e.toString());
 			e.printStackTrace();
 		}
 	}
@@ -95,21 +102,22 @@ public class JSONParser extends Thread {
 					builder.append(line);
 				}
 			} else {
-				// TODO: Handle Failure
+				Log.w(this.getClass().getName(), "Failure in HTTP-Request");
+
 			}
 		} catch (ClientProtocolException e) {
-			// TODO: Handle Exception
-			e.printStackTrace();
+			Log.e(this.getClass().getName(), e.toString());
+
 		} catch (IOException e) {
-			// TODO: Handle Exception
-			e.printStackTrace();
+			Log.e(this.getClass().getName(), e.toString());
+
 		}
 		return builder.toString();
 	}
 
 	private void sendMessage(String text) {
 		if (handler != null) {
-			Message msg = handler.obtainMessage();
+			final Message msg = handler.obtainMessage();
 			msg.obj = text;
 			handler.sendMessage(msg);
 		}

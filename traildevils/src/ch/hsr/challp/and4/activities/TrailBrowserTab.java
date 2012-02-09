@@ -3,7 +3,6 @@ package ch.hsr.challp.and4.activities;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,24 +15,31 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import ch.hsr.challp.and4.adapter.BrowserListAdapter;
 import ch.hsr.challp.and4.adapter.TrailListAdapter;
+import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
+import ch.hsr.challp.and4.domain.sortingStrategy.SortByDistance;
+import ch.hsr.challp.and4.domain.sortingStrategy.SortByName;
+import ch.hsr.challp.and4.domain.sortingStrategy.SortByPopularity;
+import ch.hsr.challp.and4.domain.sortingStrategy.SortStrategy;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.android4.R;
 
 public class TrailBrowserTab extends ListActivity{
+
+	private TrailController trailController;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_view);
 
-		ArrayList<Trail> trails = Trail.getTrails();
+		trailController = ((TrailDevils) getApplication()).getTrailController();
 
-		ListView lv = getListView();
+		final ListView lv = getListView();
 		lv.setTextFilterEnabled(true);
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -48,26 +54,14 @@ public class TrailBrowserTab extends ListActivity{
 				startActivity(ac);
 			}
 		});
-		setListAdapter(new BrowserListAdapter(this, R.layout.list_entry, trails));
-
-	}
-
-	public class SortedOnItemSelectedListener implements OnItemSelectedListener {
-
-		public void onItemSelected(AdapterView<?> parent, View view, int pos,
-				long id) {
-
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// Do nothing
-		}
+		setListAdapter(new BrowserListAdapter(this, R.layout.list_entry,
+				trailController.getTrails()));
 
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.list_header, menu);
 		return true;
 	}
@@ -79,39 +73,40 @@ public class TrailBrowserTab extends ListActivity{
 			reload();
 			return true;
 		case R.id.sort_Entfernung:
-			sort("Entfernung");
+			sort(new SortByDistance());
 			return true;
 		case R.id.sort_Favorits:
-			sort("Beliebtheit");
+			sort(new SortByPopularity());
 			return true;
 		case R.id.sort_Name:
-			sort("name");
+			sort(new SortByName());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private void sort(String string) {
-		Trail.setSorting(string);
+	private void sort(SortStrategy sortStrategy) {
+		trailController.setSortStrategy(sortStrategy);
 		((TrailListAdapter) getListAdapter()).loadNew();
 	}
 
 	@Override
 	public boolean onSearchRequested() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 		return false;
 	}
 
 	public void reload() {
-		Trail.deleteEveryThing();
-		JSONParser parser = new JSONParser(getString(R.string.JSONUrl));
+		trailController.deleteEveryThing();
+		final JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
+				null, trailController);
 		parser.start();
 		try {
 			parser.join();
 		} catch (InterruptedException e) {
-			Log.d("tag", "filtrino: " + e.toString());
+			Log.e(this.getClass().getName(), e.toString());
 		}
 		((TrailListAdapter) getListAdapter()).loadNew();
 	}

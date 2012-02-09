@@ -19,7 +19,6 @@ public class FavoritesTab extends ListActivity {
 	@Override
 	protected void onResume() {
 		((FavoritesListAdapter)getListAdapter()).loadNew();
-		Log.d("tag", "filtrino: i'm here");
 		super.onResume();
 	}
 

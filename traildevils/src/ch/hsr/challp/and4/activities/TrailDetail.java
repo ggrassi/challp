@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.technicalservices.favorites.Favorites;
 import ch.hsr.challp.and4.technicalservices.weather.GoogleWeatherHandler;
 import ch.hsr.challp.and4.technicalservices.weather.WeatherSet;
@@ -47,12 +49,14 @@ public class TrailDetail extends Activity{
 	private Drawable weather1Draw;
 	private Drawable weather2Draw;
 	private Drawable weather3Draw;
+	private TrailController trailController;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
 		favorites = ((TrailDevils) getApplication()).getFavorites();
+		trailController = ((TrailDevils) getApplication()).getTrailController();
 		
 		initActiveTrailInformation();
 		initViews();
@@ -72,7 +76,7 @@ public class TrailDetail extends Activity{
 		countryView.setText(country);
 		
 		TextView placeView = (TextView) findViewById(R.id.detailTrailPlace);
-		placeView.setText(city.equals("null") ? TRAIL_NOT_AVAILABLE : city);
+		placeView.setText(("null".equals(city) || city == null) ? TRAIL_NOT_AVAILABLE : city);
 		
 		TextView descriptionView = (TextView) findViewById(R.id.detailTrailDescription);
 		descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -105,7 +109,8 @@ public class TrailDetail extends Activity{
 	}
 
 	private void setTrailImage(ImageView mainTrailImage) {
-		if (activeTrail.getImageUrl800().equals("null")) {
+		
+		if ("null".equals(activeTrail.getImageUrl800()) || activeTrail.getImageUrl800() == null) {
 			mainTrailImage.setImageResource(R.drawable.trail_dummy);
 		} else {
 			Drawable trailDraw = loadImage(activeTrail.getImageUrl800());
@@ -118,7 +123,7 @@ public class TrailDetail extends Activity{
 		if (intentInformation != null) {
 			Integer trailId = intentInformation.getInt("key");
 			activeTrail = null;
-			for (Trail trail : Trail.getTrails()) {
+			for (Trail trail : trailController.getTrails()) {
 				if (trail.getTrailId() == trailId) {
 					activeTrail = trail;
 				}

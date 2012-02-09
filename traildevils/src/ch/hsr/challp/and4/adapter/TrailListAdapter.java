@@ -26,27 +26,33 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 import ch.hsr.challp.android4.R;
 
 public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		Observer, Filterable {
-
+	
 	protected ArrayList<Trail> trails;
 	private TrailFilter filter;
+	protected TrailController trailController;
+	private TrailDevils app;
 
 	public TrailListAdapter(Context context, int textViewResourceId,
 			ArrayList<Trail> trails) {
 		super(context, textViewResourceId, trails);
-		this.trails = trails;
-		UserLocationListener.getInstance().addObserver(this);
+		app = ((TrailDevils)context.getApplicationContext());
+		trailController = app.getTrailController();
+		this.trails=trails;
+		app.getUserLocation().addObserver(this);
 	}
 
 	public abstract void update(Observable observable, Object data);
-	
-	public  void loadNew(){
-		trails = Trail.getTrails();
+
+	public void loadNew() {
+		trails = trailController.getTrails();
 		notifyDataSetChanged();
 	}
 
@@ -54,8 +60,8 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
 		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext()
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
+					Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.list_entry, null);
 		}
 
@@ -75,23 +81,23 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		try {
 			setTrailIcon(trail, v);
 		} catch (Exception e) {
-			Log.d("tag", "filtrino: " + e.toString() + "");
+			Log.e(this.getClass().getName(), e.toString());
 		}
 		v.setId(trail.getTrailId());
 		return v;
 	}
 
-	private static String getDistanceText(Trail trail) {
+	private String getDistanceText(Trail trail) {
 		StringBuilder distance = new StringBuilder();
 		try {
 			float[] results = new float[3];
-			if (UserLocationListener.getInstance().getLatitude() > 0
-					&& UserLocationListener.getInstance().getLongitude() > 0) {
+			if (app.getUserLocation().getLatitude() > 0
+					&& app.getUserLocation().getLongitude() > 0) {
 				Location.distanceBetween(trail.getGmapX(), trail.getGmapY(),
-						UserLocationListener.getInstance().getLatitude(),
-						UserLocationListener.getInstance().getLongitude(),
+						app.getUserLocation().getLatitude(),
+						app.getUserLocation().getLongitude(),
 						results);
-				Trail.calculateEntfernungen();
+				trailController.calculateDistances();
 				distance.append(Math.round(results[0] / 1000) + " km");
 				if (trail.getNextCity() != null
 						&& !trail.getNextCity().equals("null")) {
@@ -99,7 +105,8 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			Log.e(this.getClass().getName(), e.toString());
+
 		}
 
 		if (trail.getNextCity() != null && !trail.getNextCity().equals("null")) {
@@ -112,7 +119,8 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		try {
 			loadImage(trail, (ImageView) v.findViewById(R.id.status_icon));
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(this.getClass().getName(), e.toString());
+
 		}
 		View iconContainer = v.findViewById(R.id.status_icon);
 		iconContainer.setVisibility(View.VISIBLE);
@@ -120,8 +128,8 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 
 	private void loadImage(Trail trail, ImageView listImg) throws Exception {
 		Drawable trailDraw = null;
-		File imageFile = new File(getContext().getFilesDir(), String.valueOf(trail
-				.getTrailId()) + "_120.png");
+		File imageFile = new File(getContext().getFilesDir(),
+				String.valueOf(trail.getTrailId()) + "_120.png");
 		if (imageFile.exists()) {
 			trailDraw = new BitmapDrawable(BitmapFactory.decodeFile(imageFile
 					.getAbsolutePath()));
@@ -146,8 +154,9 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	private void saveDownloadedFile(Trail trail, Drawable trailDraw)
 			throws FileNotFoundException, IOException {
 		FileOutputStream fos;
-		fos = getContext().openFileOutput(String.valueOf(trail.getTrailId())
-				+ "_120.png", Context.MODE_PRIVATE);
+		fos = getContext().openFileOutput(
+				String.valueOf(trail.getTrailId()) + "_120.png",
+				Context.MODE_PRIVATE);
 		if (trailDraw != null) {
 			((BitmapDrawable) trailDraw).getBitmap().compress(
 					Bitmap.CompressFormat.PNG, 100, fos);
@@ -155,11 +164,12 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 		fos.flush();
 		fos.close();
 	}
-	
+
+	@Override
 	public int getCount() {
 		return trails.size();
 	}
-	
+
 	@Override
 	public Trail getItem(int position) {
 		return trails.get(position);
@@ -178,12 +188,12 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 			FilterResults results = new FilterResults();
 			String filterString = constraint.toString().toLowerCase();
 
-			final ArrayList<Trail> items = Trail.getTrails();
+			final ArrayList<Trail> items = trailController.getTrails();
 			final int count = items.size();
 			final ArrayList<Trail> newItems = new ArrayList<Trail>(count);
 			for (int i = 0; i < count; i++) {
 				final Trail item = items.get(i);
-				final String itemName = item.getName().toString().toLowerCase();
+				final String itemName = item.getName().toLowerCase();
 				if (itemName.contains(filterString)) {
 					newItems.add(item);
 				}
