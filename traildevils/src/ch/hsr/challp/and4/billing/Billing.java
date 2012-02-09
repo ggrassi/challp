@@ -45,11 +45,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import ch.hsr.challp.and4.activities.TabContainer;
 import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.billing.BillingService.RequestPurchase;
 import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
@@ -65,11 +62,6 @@ public class Billing extends Activity implements OnClickListener,
 	private static final String TAG = "BillingLog";
 
 	/**
-	 * Used for storing the log text.
-	 */
-	private static final String LOG_TEXT_KEY = "Logtext";
-
-	/**
 	 * The SharedPreferences key for recording whether we initialized the
 	 * database. If false, then we perform a RestoreTransactions request to get
 	 * all the purchases for this user.
@@ -82,8 +74,6 @@ public class Billing extends Activity implements OnClickListener,
 	private BillingService mBillingService;
 	private Button mBuyButton;
 	private Spinner mSelectItemSpinner;
-	private ListView mOwnedItemsTable;
-	// private SimpleCursorAdapter mOwnedItemsAdapter;
 	private PurchaseDatabase mPurchaseDatabase;
 	private Cursor mOwnedItemsCursor;
 	private Set<String> mOwnedItems = new HashSet<String>();
@@ -141,8 +131,7 @@ public class Billing extends Activity implements OnClickListener,
 		 * @see ch.hsr.challp.and4.billing.Observable#notifyObservers()
 		 */
 		public void notifyObservers(Boolean bol) {
-			Iterator elements = observers.iterator();
-			Observer observer = null;
+			Iterator<Observer> elements = observers.iterator();
 			while (elements.hasNext() ) {
 				((Observer) elements.next()).update(null, bol);
 			}
@@ -427,14 +416,6 @@ public class Billing extends Activity implements OnClickListener,
 
 		mOwnedItemsCursor = mPurchaseDatabase.queryAllPurchasedItems();
 		startManagingCursor(mOwnedItemsCursor);
-		String[] from = new String[] {
-				PurchaseDatabase.PURCHASED_PRODUCT_ID_COL,
-				PurchaseDatabase.PURCHASED_QUANTITY_COL, };
-		int[] to = new int[] { R.id.item_name, R.id.item_quantity };
-		// mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.item_row,
-		// mOwnedItemsCursor, from, to);
-		// mOwnedItemsTable = (ListView) findViewById(R.id.owned_items);
-		// mOwnedItemsTable.setAdapter(mOwnedItemsAdapter);
 	}
 
 	private void prependLogEntry(CharSequence cs) {
@@ -524,44 +505,6 @@ public class Billing extends Activity implements OnClickListener,
 				showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
 			}
 		}
-	}
-
-	/**
-	 * Displays the dialog used to edit the payload dialog.
-	 */
-	private void showPayloadEditDialog() {
-		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-		final View view = View.inflate(this, R.layout.edit_payload, null);
-		final TextView payloadText = (TextView) view
-				.findViewById(R.id.payload_text);
-		if (mPayloadContents != null) {
-			payloadText.setText(mPayloadContents);
-		}
-
-		dialog.setView(view);
-		dialog.setPositiveButton(R.string.edit_payload_accept,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						mPayloadContents = payloadText.getText().toString();
-					}
-				});
-		dialog.setNegativeButton(R.string.edit_payload_clear,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						if (dialog != null) {
-							mPayloadContents = null;
-							dialog.cancel();
-						}
-					}
-				});
-		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-				if (dialog != null) {
-					dialog.cancel();
-				}
-			}
-		});
-		dialog.show();
 	}
 
 	/**

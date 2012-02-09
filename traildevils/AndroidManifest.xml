@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.hsr.challp.android4"
-    android:versionCode="11"
+    android:versionCode="12"
     android:versionName="1.0" >
 
     <uses-permission android:name="com.android.vending.BILLING" />
-    
+
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -16,6 +16,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,28 +55,31 @@
         <activity
             android:name="com.mobclix.android.sdk.MobclixBrowserActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:label="@string/app_name"
+            android:name="ch.hsr.challp.and4.billing.Billing" >
+            <intent-filter >
+                <action android:name="ch.hsr.challp.and4.billing.Billing" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
+        <service android:name="ch.hsr.challp.and4.billing.BillingService" />
 
-		<activity android:label="@string/app_name" android:name="ch.hsr.challp.and4.billing.Billing">
-			<intent-filter>
-				<action android:name="ch.hsr.challp.and4.billing.Billing" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
+        <receiver android:name="ch.hsr.challp.and4.billing.BillingReceiver" >
+            <intent-filter >
+                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
-		<service android:name="ch.hsr.challp.and4.billing.BillingService" />
-		<receiver android:name="ch.hsr.challp.and4.billing.BillingReceiver">
-			<intent-filter>
-				<action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
-				<action android:name="com.android.vending.billing.RESPONSE_CODE" />
-				<action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
-			</intent-filter>
-		</receiver>
         <uses-library android:name="com.google.android.maps" />
     </application>
 
     <uses-sdk android:minSdkVersion="8" />
+
     <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

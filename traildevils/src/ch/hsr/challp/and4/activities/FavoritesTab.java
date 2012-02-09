@@ -3,16 +3,15 @@ package ch.hsr.challp.and4.activities;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.adapter.FavoritesListAdapter;
 import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.android4.R;
 
 public class FavoritesTab extends ListActivity {
 
@@ -32,7 +31,13 @@ public class FavoritesTab extends ListActivity {
 		ListView lv = getListView();
 		lv.setTextFilterEnabled(true);
 
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		lv.setOnItemClickListener(getOnItemClickListener());
+		setListAdapter(new FavoritesListAdapter(this, R.layout.list_entry, app));
+
+	}
+
+	private OnItemClickListener getOnItemClickListener() {
+		return new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
@@ -42,9 +47,7 @@ public class FavoritesTab extends ListActivity {
 								.getTrailId());
 				startActivity(ac);
 			}
-		});
-		setListAdapter(new FavoritesListAdapter(this, R.layout.list_entry, app));
-
+		};
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public class FavoritesDBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		Cursor cursor = db.query(true, TABLE_NAME, new String[] { "ID" }, null,
 				null, null, null, null, null);
-		if (cursor.moveToFirst()) {
+		if (cursor != null && cursor.moveToFirst()) {
 			do {
 				list.add(cursor.getInt(0));
 			} while (cursor.moveToNext());

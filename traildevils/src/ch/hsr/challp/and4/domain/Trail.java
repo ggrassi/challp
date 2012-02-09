@@ -12,19 +12,23 @@ import ch.hsr.challp.and4.domain.sortingStrategy.SortStrategy;
 public class Trail implements Serializable, Comparable<Trail> {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2292379938873511164L;
+	/**
 	 * This is the Trail POJO
 	 */
 
-	private int trail_id, trailDevils_id, distance, favorits;
-	float gmapX;
-	float gmapY;
+	private int trail_id, trailDevils_id, distance, favorites;
+	private float gmapX;
+	private float gmapY;
 	private String country, description, imageUrl120, imageUrl800, name,
 			nextCity;
 	private SortStrategy sortStrategy;
 
 	public Trail(JSONObject Trail_NewJson) {
 		try {
-			converte(Trail_NewJson);
+			convert(Trail_NewJson);
 			sortStrategy=new SortByName();
 		} catch (JSONException e) {
 			
@@ -32,7 +36,7 @@ public class Trail implements Serializable, Comparable<Trail> {
 		}
 	}
 
-	private void converte(JSONObject trailJson) throws JSONException {
+	private void convert(JSONObject trailJson) throws JSONException {
 		trail_id = trailJson.getInt("Id");
 		country = trailJson.getString("Country");
 		description = trailJson.getString("Desc");
@@ -103,11 +107,11 @@ public class Trail implements Serializable, Comparable<Trail> {
 
 
 	public int getFavorits() {
-		return favorits;
+		return favorites;
 	}
 
 	public void setFavorits(int favorits) {
-		this.favorits = favorits;
+		this.favorites = favorits;
 	}
 
 	public int compareTo(Trail another) {

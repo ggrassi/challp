@@ -16,6 +16,12 @@
 
 package com.android.vending.licensing;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -23,12 +29,6 @@ import com.android.vending.licensing.LicenseCheckerCallback.ApplicationErrorCode
 import com.android.vending.licensing.Policy.LicenseResponse;
 import com.android.vending.licensing.util.Base64;
 import com.android.vending.licensing.util.Base64DecoderException;
-
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
 
 /**
  * Contains data related to a licensing request and methods to verify

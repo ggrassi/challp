@@ -70,10 +70,6 @@ public android.os.IBinder asBinder()
 {
 return mRemote;
 }
-public java.lang.String getInterfaceDescriptor()
-{
-return DESCRIPTOR;
-}
 public void verifyLicense(int responseCode, java.lang.String signedData, java.lang.String signature) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();

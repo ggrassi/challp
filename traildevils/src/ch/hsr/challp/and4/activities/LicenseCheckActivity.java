@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2010 The Android Open Source Project
+ */
+
 package ch.hsr.challp.and4.activities;
 
 import android.app.Activity;

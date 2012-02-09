@@ -29,7 +29,6 @@ import android.widget.TextView;
 import ch.hsr.challp.and4.application.TrailDevils;
 import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.domain.TrailController;
-import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 import ch.hsr.challp.android4.R;
 
 public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
@@ -77,13 +76,10 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 				info.setText(getDistanceText(trail));
 				date.setText(Html.fromHtml(trail.getDescription()).toString());
 			}
-		}
-		try {
 			setTrailIcon(trail, v);
-		} catch (Exception e) {
-			Log.e(this.getClass().getName(), e.toString());
+			v.setId(trail.getTrailId());
 		}
-		v.setId(trail.getTrailId());
+	
 		return v;
 	}
 
@@ -174,7 +170,7 @@ public abstract class TrailListAdapter extends ArrayAdapter<Trail> implements
 	public Trail getItem(int position) {
 		return trails.get(position);
 	}
-
+	@Override
 	public Filter getFilter() {
 		if (filter == null) {
 			filter = new TrailFilter();

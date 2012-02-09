@@ -13,23 +13,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.domain.Trail;
+import ch.hsr.challp.and4.domain.TrailController;
 
 public class JSONParser extends Thread {
-	public Context getCtx() {
-		return ctx;
-	}
-
-	public void setCtx(Context ctx) {
-		this.ctx = ctx;
-	}
 
 	private String url;
 	private Handler handler;
@@ -59,6 +51,14 @@ public class JSONParser extends Thread {
 		sendMessage("Launching Trail-Browser...");
 	}
 
+	public Context getCtx() {
+		return ctx;
+	}
+	
+	public void setCtx(Context ctx) {
+		this.ctx = ctx;
+	}
+	
 	private void parse() {
 		try {
 			String readedFeed = readFeed();
@@ -101,6 +101,7 @@ public class JSONParser extends Thread {
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
 				}
+				reader.close();
 			} else {
 				Log.w(this.getClass().getName(), "Failure in HTTP-Request");
 
@@ -111,7 +112,7 @@ public class JSONParser extends Thread {
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(), e.toString());
 
-		}
+		} 
 		return builder.toString();
 	}
 

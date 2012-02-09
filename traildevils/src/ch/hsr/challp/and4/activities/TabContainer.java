@@ -24,7 +24,7 @@ public class TabContainer extends TabActivity implements Observer {
 
 		intent = new Intent().setClass(this, TrailBrowserTab.class);
 		spec = tabHost
-				.newTabSpec("some_things")
+				.newTabSpec("trail_things")
 				.setIndicator(
 						this.getString(R.string.trail_browser_tab_title),
 						getResources().getDrawable(
@@ -35,7 +35,7 @@ public class TabContainer extends TabActivity implements Observer {
 		intent = new Intent().setClass(this.getApplicationContext(),
 				MapTab.class);
 		spec = tabHost
-				.newTabSpec("dif_things")
+				.newTabSpec("map_things")
 				.setIndicator(this.getString(R.string.map_tab_title),
 						getResources().getDrawable(R.drawable.ic_tab_map))
 				.setContent(intent);

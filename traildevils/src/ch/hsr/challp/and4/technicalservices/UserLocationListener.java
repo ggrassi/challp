@@ -21,7 +21,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import ch.hsr.challp.and4.activities.StartScreen;
 
 public class UserLocationListener extends Observable implements
@@ -31,8 +30,8 @@ public class UserLocationListener extends Observable implements
 	private Location current = new Location("newOne");
 
 
-	public UserLocationListener() {
-		LocationManager mlocManager = (LocationManager) StartScreen
+	public UserLocationListener(StartScreen startScreen) {
+		LocationManager mlocManager = (LocationManager) startScreen
 				.getLocationService();
 		LocationListener mlocListener = this;
 		mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,

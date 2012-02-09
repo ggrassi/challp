@@ -21,7 +21,8 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public class MapTab extends MapActivity implements Observer{
+public class MapTab extends MapActivity implements Observer {
+	private static final int zoomCorrection = 11;
 	private MapView mapView;
 	private MapController mapCtrl;
 	private MyLocationOverlay myLocationOverlay;
@@ -37,7 +38,7 @@ public class MapTab extends MapActivity implements Observer{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
-		trailController=((TrailDevils)getApplication()).getTrailController();
+		trailController = ((TrailDevils) getApplication()).getTrailController();
 		initMapView();
 		initMyLocationOverlay();
 		initTrailOverlay();
@@ -46,11 +47,13 @@ public class MapTab extends MapActivity implements Observer{
 	private void initTrailOverlay() {
 		mapOverlay = mapView.getOverlays();
 		drawable = this.getResources().getDrawable(R.drawable.map_marker);
-		trailizedOverlay = new TrailizedOverlay(drawable, getApplicationContext());
-
+		trailizedOverlay = new TrailizedOverlay(drawable,
+				getApplicationContext());
+		int xCoor, yCoor;
 		for (Trail trail : trailController.getTrails()) {
-			point = new GeoPoint((int) (trail.getGmapX() * 1E6),
-					(int) (trail.getGmapY() * 1E6));
+			xCoor = (int) (trail.getGmapX() * 1E6);
+			yCoor = (int) (trail.getGmapY() * 1E6);
+			point = new GeoPoint(xCoor, yCoor);
 			overlayItem = new OverlayItem(point, trail.getName(),
 					String.valueOf(trail.getTrailId()));
 			trailizedOverlay.addOverlayItem(overlayItem);
@@ -89,7 +92,7 @@ public class MapTab extends MapActivity implements Observer{
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapCtrl = mapView.getController();
 
-		final int maxZoomLevel = mapView.getMaxZoomLevel() - 11;
+		final int maxZoomLevel = mapView.getMaxZoomLevel() - zoomCorrection;
 		mapCtrl.setZoom(maxZoomLevel);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setSatellite(true);
@@ -116,7 +119,8 @@ public class MapTab extends MapActivity implements Observer{
 	}
 
 	public void update(Observable observable, Object data) {
-//		TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled((Boolean) data);
-		
+		// TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled((Boolean)
+		// data);
+
 	}
 }

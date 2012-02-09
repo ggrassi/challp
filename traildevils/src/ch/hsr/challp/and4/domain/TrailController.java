@@ -34,6 +34,7 @@ public class TrailController {
 		return trailsArrayList;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void deserialize() throws IOException {
 		if (serializationExists()) {
 			FileInputStream fis = null;

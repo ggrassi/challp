@@ -16,6 +16,17 @@
 
 package com.android.vending.licensing;
 
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -31,17 +42,6 @@ import com.android.vending.licensing.LicenseCheckerCallback.ApplicationErrorCode
 import com.android.vending.licensing.Policy.LicenseResponse;
 import com.android.vending.licensing.util.Base64;
 import com.android.vending.licensing.util.Base64DecoderException;
-
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * Client library for Android Market license verifications.

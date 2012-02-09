@@ -9,8 +9,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import ch.hsr.challp.and4.technicalservices.weather.WeatherUtils;
-
 public class GoogleWeatherHandler extends DefaultHandler {
 
 	private WeatherSet myWeatherSet = null;

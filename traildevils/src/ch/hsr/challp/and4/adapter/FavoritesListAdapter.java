@@ -1,6 +1,5 @@
 package ch.hsr.challp.and4.adapter;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 

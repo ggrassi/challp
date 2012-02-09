@@ -46,7 +46,8 @@ public abstract class PurchaseObserver {
     private final Handler mHandler;
     private Method mStartIntentSender;
     private Object[] mStartIntentSenderArgs = new Object[5];
-    private static final Class[] START_INTENT_SENDER_SIG = new Class[] {
+    @SuppressWarnings("rawtypes")
+	private static final Class[] START_INTENT_SENDER_SIG = new Class[] {
         IntentSender.class, Intent.class, int.class, int.class, int.class
     };
 

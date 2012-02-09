@@ -8,20 +8,19 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 import ch.hsr.challp.and4.application.TrailDevils;
-import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.domain.TrailController;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.and4.technicalservices.UserLocationListener;
 import ch.hsr.challp.android4.R;
 
 public class StartScreen extends LicenseCheckActivity {
-	private static Object locationService = null;
+	private Object locationService = null;
 
 	private Controller controller;
 
 	private TextView textViewToChange;
 
-	public static Object getLocationService() {
+	public Object getLocationService() {
 		return locationService;
 	}
 
@@ -37,7 +36,7 @@ public class StartScreen extends LicenseCheckActivity {
 		Object tmpLocationService = getSystemService(Context.LOCATION_SERVICE);
 		locationService = tmpLocationService;
 		((TrailDevils) getApplication())
-				.setUserLocation(new UserLocationListener());
+				.setUserLocation(new UserLocationListener(this));
 
 		setWaitText("Checking Application License...");
 		checkLicense();
@@ -49,11 +48,6 @@ public class StartScreen extends LicenseCheckActivity {
 		controller.start();
 	};
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
 	private void setWaitText(String waitText) {
 		textViewToChange.setText(waitText);
 	}
@@ -64,16 +58,16 @@ public class StartScreen extends LicenseCheckActivity {
 			try {
 				textViewToChange.setText((String) msg.obj);
 			} catch (Exception e) {
-				// Do nothing
+				e.printStackTrace();
 			}
 		}
 	};
 
-	class Controller extends Thread {
-		Handler myH;
+   private class Controller extends Thread {
+		private Handler myHandler;
 
 		public Controller(Handler h) {
-			myH = h;
+			myHandler = h;
 		}
 
 		@Override
@@ -85,7 +79,7 @@ public class StartScreen extends LicenseCheckActivity {
 				trailController.getTrails().clear();
 				if (!trailController.serializationExists()) {
 					final JSONParser parser = new JSONParser(
-							getString(R.string.JSONUrl), myH, trailController);
+							getString(R.string.JSONUrl), myHandler, trailController);
 					parser.setCtx(getBaseContext());
 					parser.start();
 					parser.join();

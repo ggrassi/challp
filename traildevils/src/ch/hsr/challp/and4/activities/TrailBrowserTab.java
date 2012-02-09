@@ -1,8 +1,7 @@
 package ch.hsr.challp.and4.activities;
 
-import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Observer;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +29,10 @@ import ch.hsr.challp.android4.R;
 
 public class TrailBrowserTab extends ListActivity{
 
+	private static final int SORT_NAME = R.id.sort_Name;
+	private static final int SORT_FAVORITES = R.id.sort_Favorits;
+	private static final int SORT_DISTANCE = R.id.sort_Entfernung;
+	private static final int RELOAD = R.id.reload;
 	private TrailController trailController;
 
 	@Override
@@ -42,7 +45,14 @@ public class TrailBrowserTab extends ListActivity{
 		final ListView lv = getListView();
 		lv.setTextFilterEnabled(true);
 
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		lv.setOnItemClickListener(getOnitemClickListener());
+		setListAdapter(new BrowserListAdapter(this, R.layout.list_entry,
+				trailController.getTrails()));
+
+	}
+
+	private OnItemClickListener getOnitemClickListener() {
+		return new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
@@ -53,10 +63,7 @@ public class TrailBrowserTab extends ListActivity{
 								.getTrailId());
 				startActivity(ac);
 			}
-		});
-		setListAdapter(new BrowserListAdapter(this, R.layout.list_entry,
-				trailController.getTrails()));
-
+		};
 	}
 
 	@Override
@@ -69,16 +76,16 @@ public class TrailBrowserTab extends ListActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.reload:
+		case RELOAD:
 			reload();
 			return true;
-		case R.id.sort_Entfernung:
+		case SORT_DISTANCE:
 			sort(new SortByDistance());
 			return true;
-		case R.id.sort_Favorits:
+		case SORT_FAVORITES:
 			sort(new SortByPopularity());
 			return true;
-		case R.id.sort_Name:
+		case SORT_NAME:
 			sort(new SortByName());
 			return true;
 		default:
@@ -98,7 +105,7 @@ public class TrailBrowserTab extends ListActivity{
 		return false;
 	}
 
-	public void reload() {
+	private void reload() {
 		trailController.deleteEveryThing();
 		final JSONParser parser = new JSONParser(getString(R.string.JSONUrl),
 				null, trailController);

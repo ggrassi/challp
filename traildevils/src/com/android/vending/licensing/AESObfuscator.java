@@ -16,9 +16,6 @@
 
 package com.android.vending.licensing;
 
-import com.android.vending.licensing.util.Base64;
-import com.android.vending.licensing.util.Base64DecoderException;
-
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.spec.KeySpec;
@@ -31,6 +28,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import com.android.vending.licensing.util.Base64;
+import com.android.vending.licensing.util.Base64DecoderException;
 
 /**
  * An Obfuscator that uses AES to encrypt data.

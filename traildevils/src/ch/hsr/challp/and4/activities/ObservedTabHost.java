@@ -1,7 +1,7 @@
 package ch.hsr.challp.and4.activities;
 
-import ch.hsr.challp.and4.billing.Observer;
 import android.content.Context;
+import ch.hsr.challp.and4.billing.Observer;
 
 public class ObservedTabHost extends android.widget.TabHost implements Observer {
 

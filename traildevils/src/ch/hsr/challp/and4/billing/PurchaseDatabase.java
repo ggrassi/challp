@@ -178,22 +178,15 @@ public class PurchaseDatabase {
      * This is a standard helper class for constructing the database.
      */
     private class DatabaseHelper extends SQLiteOpenHelper {
-    	private SQLiteDatabase db = null;
-    	
-        public DatabaseHelper(Context context) {
+    	public DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-        	this.db=db;
-            createPurchaseTable(db);
+        	createPurchaseTable(db);
         }
         
-        public SQLiteDatabase getDBContext(){
-        	return this.db;
-        }
-
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // Production-quality upgrade code should modify the tables when

@@ -26,7 +26,7 @@ public class TrailizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context context;
 	
 	public TrailizedOverlay(Drawable defaultMarker, Context c) {
-		super(boundCenterBottom((defaultMarker)));
+		super(boundCenterBottom(defaultMarker));
 		context = c;
 	}
 	
