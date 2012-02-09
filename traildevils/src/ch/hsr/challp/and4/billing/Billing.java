@@ -16,8 +16,12 @@
 
 package ch.hsr.challp.and4.billing;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 import android.app.Activity;
@@ -33,7 +37,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,17 +46,15 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.hsr.challp.android4.R;
 import ch.hsr.challp.and4.activities.TabContainer;
 import ch.hsr.challp.and4.billing.BillingService.RequestPurchase;
 import ch.hsr.challp.and4.billing.BillingService.RestoreTransactions;
 import ch.hsr.challp.and4.billing.Consts.PurchaseState;
 import ch.hsr.challp.and4.billing.Consts.ResponseCode;
+import ch.hsr.challp.android4.R;
 
 /**
  * A sample application that demonstrates in-app billing.
@@ -106,13 +107,48 @@ public class Billing extends Activity implements OnClickListener,
      */
     private enum Managed { MANAGED, UNMANAGED }
 
+    public class ConcreteObservable implements ch.hsr.challp.and4.billing.Observable {
+    	private ArrayList observers = new ArrayList();
+
+    	/* (non-Javadoc)
+		 * @see ch.hsr.challp.and4.billing.Observable#addObserver(java.util.Observer)
+		 */
+    	public void addObserver(Observer obsrNewObserver) {
+    		if (!observers.contains(obsrNewObserver)) {
+    			observers.add(obsrNewObserver);
+    		}
+    	}
+
+    	/* (non-Javadoc)
+		 * @see ch.hsr.challp.and4.billing.Observable#removeObserver(java.util.Observer)
+		 */
+    	public void removeObserver(Observer obsrToRemove) {
+    		observers.remove(obsrToRemove);
+    	}
+
+    	/* (non-Javadoc)
+		 * @see ch.hsr.challp.and4.billing.Observable#notifyObservers()
+		 */
+    	public void notifyObservers() {
+    		Iterator elements = observers.iterator();
+    		while (elements.hasNext()) {
+    			((ch.hsr.challp.and4.billing.Observer)elements.next()).handleEvent();
+    		}
+    	}
+    }
+
+    
+    
     /**
      * A {@link PurchaseObserver} is used to get callbacks when Android Market sends
      * messages to this application so that we can update the UI.
      */
     private class MyPurchaseObserver extends PurchaseObserver {
-        public MyPurchaseObserver(Handler handler) {
+        
+    	public MyPurchaseObserver(Handler handler) {
             super(Billing.this, handler);
+            ConcreteObservable tabObservable = new ConcreteObservable();
+            tabObservable.addObserver(tab);
         }
 
         @Override
@@ -158,12 +194,13 @@ public class Billing extends Activity implements OnClickListener,
                 if (Consts.DEBUG) {
                     Log.i(TAG, "purchase was successfully sent to server");
                 }
+                TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(true);
                 logProductActivity(request.mProductId, "sending purchase request");
             } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
                 if (Consts.DEBUG) {
                     Log.i(TAG, "user canceled purchase");
                 }
-                logProductActivity(request.mProductId, "dismissed purchase dialog");
+                logProductActivity(request.mProductId, "dismissedpurchase dialog");
                 TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);
 
             } else {

@@ -1,8 +1,5 @@
 package ch.hsr.challp.and4.activities;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +8,7 @@ import android.widget.TabHost;
 import ch.hsr.challp.and4.billing.Billing;
 import ch.hsr.challp.android4.R;
 
-public class TabContainer extends TabActivity implements Observer {
+public class TabContainer extends TabActivity{
 	
 	private TabContainer tabContainer;
 
@@ -25,7 +22,7 @@ public class TabContainer extends TabActivity implements Observer {
     	return context;
     }
 	
-	public static TabHost tabHost = null;
+	private static TabHost tabHost = null;
 	
 	public void onUpdate(boolean bol){
 		setEnabled(bol);
@@ -41,7 +38,7 @@ public class TabContainer extends TabActivity implements Observer {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.tab);
-		TabHost tab = getTabHost();
+		ObservedTabHost tab = (ObservedTabHost) getTabHost();
 		tabHost = tab;
 		TabHost.TabSpec spec;
 		Intent intent;
@@ -66,10 +63,5 @@ public class TabContainer extends TabActivity implements Observer {
 		spec = tabHost.newTabSpec("inappbilling_tab").setIndicator(this.getString(R.string.buy_tab_title), getResources().getDrawable(R.drawable.ic_tab_billing))
 				.setContent(intent);
 		tabHost.addTab(spec);
-	}
-
-	public void update(Observable obj, Object arg) {
-	            resp = (String) arg;
-	            System.out.println("\nReceived Response: "+ resp );
 	}
 }

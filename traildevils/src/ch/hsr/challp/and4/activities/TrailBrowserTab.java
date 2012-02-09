@@ -1,6 +1,8 @@
 package ch.hsr.challp.and4.activities;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -22,7 +24,7 @@ import ch.hsr.challp.and4.domain.Trail;
 import ch.hsr.challp.and4.technicalservices.JSONParser;
 import ch.hsr.challp.android4.R;
 
-public class TrailBrowserTab extends ListActivity {
+public class TrailBrowserTab extends ListActivity{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,5 +114,9 @@ public class TrailBrowserTab extends ListActivity {
 			Log.d("tag", "filtrino: " + e.toString());
 		}
 		((TrailListAdapter) getListAdapter()).loadNew();
+	}
+
+	public void update(Observable observable, Object data) {
+		
 	}
 }

@@ -1,6 +1,8 @@
 package ch.hsr.challp.and4.activities;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -17,7 +19,7 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public class MapTab extends MapActivity {
+public class MapTab extends MapActivity implements Observer{
 	private MapView mapView;
 	private MapController mapCtrl;
 	private MyLocationOverlay myLocationOverlay;
@@ -108,5 +110,10 @@ public class MapTab extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+	public void update(Observable observable, Object data) {
+//		TabContainer.tabHost.getTabWidget().getChildTabViewAt(1).setEnabled((Boolean) data);
+		
 	}
 }
